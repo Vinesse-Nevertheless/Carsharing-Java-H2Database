@@ -13,6 +13,21 @@ files:
   - name: test/DatabaseUtil.java
     visible: true
     learner_created: false
+  - name: src/carsharing/DbClient.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDOA.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Company.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDOAImpl.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/DbConfig.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/140/stages/760/implement#comment
 status: Unchecked
 record: -1

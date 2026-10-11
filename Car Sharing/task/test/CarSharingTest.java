@@ -3,16 +3,26 @@ import org.hyperskill.hstest.exception.outcomes.WrongAnswer;
 import org.hyperskill.hstest.stage.StageTest;
 import org.hyperskill.hstest.testcase.CheckResult;
 import org.hyperskill.hstest.testing.TestedProgram;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.io.File;
 
 public class CarSharingTest extends StageTest<Void> {
 
     private static final String databaseFileName = "src/carsharing/db/carsharing.mv.db";
+    private static final String tempDatabaseFileName = "src/carsharing/db/tempDatabase.mv.db";
     private static DatabaseUtil db = new DatabaseUtil();
+    private static boolean userDbExistedInitially = false;
 
-    @BeforeClass
+    //@BeforeClass
     public static void deleteDatabaseFile() {
         File file = new File(databaseFileName);
 
@@ -26,15 +36,70 @@ public class CarSharingTest extends StageTest<Void> {
         }
     }
 
+    private static void closeConnection() {
+        Connection connection = db.getConnection();
+        if (connection == null)
+            return;
+        try {
+            connection.close();
+        } catch (SQLException ignored) {
+        }
+        connection = null;
+    }
+    
+    @BeforeClass
+    public static void createTempDatabase() {
+        Path userDbFile = Paths.get(databaseFileName);
+        Path tempDbFile = Paths.get(tempDatabaseFileName);
+
+        userDbExistedInitially = userDbFile.toFile().exists();
+        
+        closeConnection();
+
+        if (!userDbFile.toFile().exists()) {
+            return;
+        }
+
+        try {
+            Files.deleteIfExists(tempDbFile);
+            Files.copy(userDbFile, tempDbFile);
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    @AfterClass
+    public static void deleteTempDatabase() {
+        closeConnection();
+
+        Path userDbFile = Paths.get(databaseFileName);
+        Path tempDbFile = Paths.get(tempDatabaseFileName);
+
+        if (!tempDbFile.toFile().exists()){
+            return;
+        }
+
+        try {
+            if (userDbExistedInitially) {
+                Files.deleteIfExists(userDbFile);
+                Files.move(tempDbFile, userDbFile);
+            }else {
+                Files.deleteIfExists(userDbFile);
+                Files.deleteIfExists(tempDbFile);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     @DynamicTest(order = -1)
     public CheckResult test2_ifDatabaseExist() {
 
         TestedProgram program = new TestedProgram();
         program.start("-databaseFileName", "carsharing");
+        program.execute("0");
 
         if (!program.isFinished()) {
-            return CheckResult.wrong("After running the program, it should create the database file" +
-                " in the carsharing/db/ folder, initialize the table described above, and stop.");
+            return CheckResult.wrong("After choosing 'Exit' item your program should stop.");
         }
 
         File file = new File(databaseFileName);
@@ -49,44 +114,264 @@ public class CarSharingTest extends StageTest<Void> {
     }
 
     @DynamicTest
-    public CheckResult test1_ifDatabaseExist() {
-
+    public CheckResult test1_testMenu() {
         TestedProgram program = new TestedProgram();
-        program.start("-databaseFileName", "carsharing");
+        String output = program.start("-databaseFileName", "carsharing");
 
-        if (!program.isFinished()) {
-            return CheckResult.wrong("After starting your program should initialize the database, create table named 'company' and stop.");
+        if (!output.contains("1. Log in as a manager")) {
+            return CheckResult.wrong("Start menu should contain \"1. Log in as a manager\"");
         }
 
-        File file = new File(databaseFileName);
-
-        if (!file.exists()) {
-            return CheckResult.wrong("Can't find a database file. It should be named 'carsharing.mv.db'" +
-                " and located in /carsharing/db/ folder.\n" +
-                "Note that .mv.db extension will be added automatically to the database file name.");
+        if (!output.contains("0. Exit")) {
+            return CheckResult.wrong("Start menu should contain \"0. Exit\"");
         }
 
-        return correct();
+        output = program.execute("1");
+
+        if (!output.contains("1. Company list")) {
+            return CheckResult.wrong("After choosing 'Log in as a manager' item you should print menu that contains '1. Company list' item");
+        }
+
+        if (!output.contains("2. Create a company")) {
+            return CheckResult.wrong("After choosing 'Log in as a manager' item you should print menu that contains '2. Create a company' item");
+        }
+
+        if (!output.contains("0. Back")) {
+            return CheckResult.wrong("After choosing 'Log in as a manager' item you should print menu that contains '0. Back' item");
+        }
+
+        output = program.execute("0");
+
+        if (!output.contains("1. Log in as a manager")) {
+            return CheckResult.wrong("After choosing '0. Back' item you should print previous menu and it should contain \"1. Log in as a manager\"");
+        }
+
+        if (!output.contains("0. Exit")) {
+            return CheckResult.wrong("After choosing '0. Back' item you should print previous menu and it should contain \"0. Exit\"");
+        }
+
+        return CheckResult.correct();
     }
 
     @DynamicTest
-    public CheckResult test2_checkDatabaseConnection() {
+    public CheckResult test3_checkDatabaseConnection() {
         db.getConnection();
         return correct();
     }
 
     @DynamicTest
-    public CheckResult test3_checkIfTableExists() {
-        if (!db.ifTableExist("COMPANY")) {
-            return wrong("Can't find table named 'COMPANY'");
+    public CheckResult test4_checkIfTableExists() {
+        if (!db.ifTableExist("company")) {
+            return wrong("Can't find table named 'company'");
+        }
+        if (!db.ifTableExist("car")) {
+            return wrong("Can't find table named 'car'");
         }
         return correct();
     }
 
     @DynamicTest
-    public CheckResult test4_checkTableColumns() {
-        String[][] columns = {{"ID", "INT"}, {"NAME", "VARCHAR"}};
-        db.ifColumnsExist("COMPANY", columns);
+    public CheckResult test5_checkTableColumns() {
+        String[][] companyColumns = {{"ID", "INT"}, {"NAME", "VARCHAR"}};
+        db.ifColumnsExist("company", companyColumns);
+        db.checkCompanyColumnProperties();
+
+        String[][] carColumns = {{"ID", "INT"}, {"NAME", "VARCHAR"}, {"COMPANY_ID", "INT"}};
+        db.ifColumnsExist("car", carColumns);
+        db.checkCarColumnProperties();
+        return correct();
+    }
+
+    @DynamicTest
+    public CheckResult test6_testAddCompany() {
+
+        TestedProgram program = new TestedProgram();
+        program.start("-databaseFileName", "carsharing");
+
+        db.clearCarTable();
+        db.clearCompanyTable();
+
+        program.execute("1");
+        String output = program.execute("1");
+
+        if (!output.contains("The company list is empty")) {
+            return wrong("If no company has been created you should print 'The company list is empty' when '1. Company list' item is chosen");
+        }
+
+        output = program.execute("2");
+
+        if (!output.contains("Enter the company name")) {
+            return wrong("After choosing '2. Create a company' item you should ask to enter a company name.\n" +
+                "Your output should contain 'Enter the company name:'");
+        }
+
+        program.execute("Super company");
+        output = program.execute("1");
+
+        if (!output.contains("1. Super company")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '1. Super company'");
+        }
+
+        db.checkCompany("Super company");
+
+        program.execute("0\n2\nAnother company");
+        program.execute("2\nOne more company");
+
+        db.checkCompany("Another company");
+        db.checkCompany("One more company");
+
+        output = program.execute("1");
+
+        if (!output.contains("1. Super company")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '1. Super company'.\n" +
+                "Companies should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("2. Another company")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '2. Another company'.\n" +
+                "Companies should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("3. One more company")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '2. Another company'.\n" +
+                "Companies should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("0. Back")) {
+            return wrong("There is no back option in the company list.\n" +
+                "Your output should contain '0. Back'");
+        }
+
+        program.execute("2");
+
+        return correct();
+    }
+
+    @DynamicTest
+    public CheckResult test7_testAddCar() {
+
+        TestedProgram program = new TestedProgram();
+        program.start("-databaseFileName", "carsharing");
+        String output;
+
+        db.clearCarTable();
+        db.clearCompanyTable();
+
+        program.execute("1");
+        program.execute("2");
+        program.execute("Car To Go");
+        program.execute("2");
+        program.execute("Drive Now");
+
+        db.checkCompany("Car To Go");
+        db.checkCompany("Drive Now");
+
+        output = program.execute("1");
+
+        if (!output.contains("1. Car To Go")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '1. Car To Go'.\n" +
+                "Companies should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("2. Drive Now")) {
+            return wrong("In the company list expected one company.\n" +
+                "Your output should contain '2. Drive Now'\n" +
+                "Companies should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("0. Back")) {
+            return wrong("There is no back option in the company list.\n" +
+                "Your output should contain '0. Back'");
+        }
+
+        output = program.execute("1");
+
+        if (!output.contains("1. Car list")) {
+            return wrong("After choosing company you should print menu that contains '1. Car list' item");
+        }
+
+        if (!output.contains("2. Create a car")) {
+            return wrong("After choosing company you should print menu that contains '2. Create a car' item");
+        }
+
+        if (!output.contains("0. Back")) {
+            return wrong("After choosing company you should print menu that contains '0. Back' item");
+        }
+
+        output = program.execute("1");
+
+        if (!output.contains("The car list is empty!")) {
+            return wrong("If no cars were added to the company you should print 'The car list is empty!'");
+        }
+
+        output = program.execute("2");
+
+        if (!output.contains("Enter the car name:")) {
+            return wrong("After choosing 'Create a car' item you should ask to enter a car name. " +
+                "Your output should contain 'Enter the car name:'");
+        }
+
+        program.execute("Hyundai Venue");
+        db.checkCar("Car To Go", "Hyundai Venue");
+
+        program.execute("2");
+        program.execute("Maruti Suzuki Dzire");
+        db.checkCar("Car To Go", "Maruti Suzuki Dzire");
+
+        output = program.execute("1");
+
+        if (!output.contains("1. Hyundai Venue")) {
+            return wrong("In the car list expected 'Hyundai Venue' car.\n" +
+                "Your output should contain '1. Hyundai Venue'\n" +
+                "Cars should be sorted by 'ID' column");
+        }
+
+        if (!output.contains("2. Maruti Suzuki Dzire")) {
+            return wrong("In the car list expected 'Maruti Suzuki Dzire' car.\n" +
+                "Your output should contain '2. Maruti Suzuki Dzire'\n" +
+                "Cars should be sorted by 'ID' column");
+        }
+
+        program.execute("0");
+
+        program.execute("1");
+        program.execute("2");
+
+        output = program.execute("1");
+
+        if (!output.contains("The car list is empty!")) {
+            return wrong("If no cars were added to the company you should print 'The car list is empty!'");
+        }
+
+        program.execute("2");
+        program.execute("Lamborghini Urraco");
+
+        output = program.execute("1");
+
+        if (!output.contains("1. Lamborghini Urraco")) {
+            return wrong("In the car list expected 'Lamborghini Urraco' car.\n" +
+                "Your output should contain '1. Lamborghini Urraco'");
+        }
+
+        if (output.contains("Hyundai Venue")) {
+            return wrong("Your output contains 'Hyundai Venue'. This car is from another company");
+        }
+
+        if (output.contains("Maruti Suzuki Dzire")) {
+            return wrong("Your output contains 'Maruti Suzuki Dzire'. This car is from another company");
+        }
+
+        db.checkCar("Drive Now", "Lamborghini Urraco");
+
+        program.execute("0");
+        program.execute("0");
+        program.execute("0");
+
         return correct();
     }
 
