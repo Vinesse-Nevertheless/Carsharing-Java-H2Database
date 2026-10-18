@@ -7,10 +7,8 @@ files:
     visible: true
     learner_created: false
   - name: test/CarSharingTest.java
-    visible: true
     learner_created: false
   - name: test/DatabaseUtil.java
-    visible: true
     learner_created: false
 feedback_link: https://hyperskill.org/projects/140/stages/758/implement#comment
 status: Solved

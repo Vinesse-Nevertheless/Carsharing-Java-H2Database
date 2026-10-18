@@ -4,64 +4,138 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
-    static CompanyDOA companyDOAImpl;
+    static DbClient dbClient;
+    static CompanyDAOImpl companyDAOImpl;
 
     public static void main(String[] args) {
 
         DbConfig.connectToDb(args);
 
-        DbClient dbClient = new DbClient(DbConfig.DB_URL);
-        dbClient.createTable();
+        dbClient = new DbClient(DbConfig.DB_URL);
+        dbClient.createCompanyTable();
 
-        companyDOAImpl = new CompanyDOAImpl(dbClient);
+        companyDAOImpl = new CompanyDAOImpl(dbClient);
 
-        UserInput userInput = new UserInput();
-        init(userInput);
-        userInput.closeConnection();
+        init();
     }
 
-    static void init(UserInput userInput) {
+    static void init() {
+
+        UserInput userInput = new UserInput();
+        CompanyActions manager = new CompanyActions(companyDAOImpl);
 
         List<String> loginMenu = List.of("Exit",
                 "Log in as a manager");
 
-        List<String> managerOnlyMenu = List.of("Back",
-                "Company list",
-                "Create a company");
-
-        int loginIdentity = -1;
-
         while (true) {
             Printer.printMenu(loginMenu);
-            loginIdentity = userInput.getLoginIdentity(loginMenu);
+            int loginIdentity = userInput.getLoginIdentity(loginMenu);
 
             if (loginIdentity == 0) {
                 break;
             }
 
-            while (loginIdentity == 1) {
-                Printer.printMenu(managerOnlyMenu);
-                int managerChoice = userInput.getManagerOnlyOptions(managerOnlyMenu);
-                switch (managerChoice) {
-                    case 1 -> {
-                        if (companyDOAImpl.findAll() == null || companyDOAImpl.findAll().isEmpty()) {
-                            System.out.println("The company list is empty!");
-                            System.out.println();
-                        } else {
-                            System.out.println("Company list:");
-                            companyDOAImpl.findAll().forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
-                            System.out.println();
+            if (loginIdentity == 1) {
+                manager.executeCompanyTasks();
+            }
+        }
+        userInput.closeConnection();
+    }
+}
+
+
+class CompanyActions {
+    List<String> companyMenu = List.of("Back",
+            "Company list",
+            "Create a company");
+
+    UserInput userInput = new UserInput();
+    CompanyDAOImpl companyDAOImpl;
+    CarActions manager;
+
+    public CompanyActions(CompanyDAOImpl companyDAOimpl) {
+        this.companyDAOImpl = companyDAOimpl;
+        manager = new CarActions(companyDAOImpl.getDbClient());
+    }
+
+    void executeCompanyTasks() {
+        while (true) {
+            Printer.printMenu(companyMenu);
+            int companyChoice = userInput.getMenuNum(companyMenu);
+            switch (companyChoice) {
+                case 1 -> {
+                    List<Company> companies = companyDAOImpl.findAll();
+                    if (companies.isEmpty()) {
+                        System.out.println("The company list is empty!\n");
+                    } else {
+                        System.out.println("Choose the company:");
+                        companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
+                        System.out.println("0. Back");
+
+                        int companyNum = userInput.getMenuNum(companies);
+                        if (companyNum == 0) {
+                            continue;
                         }
+                        System.out.println("'" + companies.get(companyNum - 1).getName() + "' " + "company");
+                        manager.executeCarTasks(companyNum);
                     }
-                    case 2 -> {
-                        String name = userInput.getNewName();
-                        if (companyDOAImpl.add(new Company(name))) {
-                            System.out.println("The company was created!");
-                            System.out.println();
+                }
+                case 2 -> {
+                    System.out.println("Enter the company name:");
+                    String name = userInput.getNewName();
+                    if (companyDAOImpl.add(new Company(name))) {
+                        System.out.println("The company was created!\n");
+                    }
+                }
+                case 0 -> {
+                    return;
+                }
+            }
+        }
+    }
+}
+
+class CarActions {
+
+    List<String> carMenu = List.of("Back",
+            "Car list",
+            "Create a car");
+
+    UserInput userInput = new UserInput();
+    CarDAO carDAOImpl;
+
+    public CarActions(DbClient dbClient) {
+        dbClient.createCarTable();
+        carDAOImpl = new CarDAOImpl(dbClient);
+    }
+
+    void executeCarTasks(int companyId) {
+
+        while (true) {
+            Printer.printMenu(carMenu);
+            int carChoice = userInput.getMenuNum(carMenu);
+            switch (carChoice) {
+                case 1 -> {
+                    List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
+                    if (carsAtCompany.isEmpty()) {
+                        System.out.println("The car list is empty!\n");
+                    } else {
+                        System.out.println("Car list:");
+                        for (int i = 0; i < carsAtCompany.size(); i++) {
+                            System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
                         }
+                        System.out.println();
                     }
-                    case 0 -> loginIdentity = -1;
+                }
+                case 2 -> {
+                    System.out.println("Enter the car name:");
+                    String name = userInput.getNewName();
+                    if (carDAOImpl.addCarToCompany(new Car(companyId, name))) {
+                        System.out.println("The car was added!\n");
+                    }
+                }
+                case 0 -> {
+                    return;
                 }
             }
         }
@@ -70,11 +144,7 @@ public class Main {
 
 class UserInput {
 
-    private final Scanner in;
-
-    public UserInput() {
-        in = new Scanner(System.in);
-    }
+    private final Scanner in = new Scanner(System.in);
 
     public int getLoginIdentity(List<String> loginMenu) {
         String loginMenuNumber = in.nextLine();
@@ -82,26 +152,24 @@ class UserInput {
         return Validator.getValidMenuOption(loginMenuNumber, loginMenu);
     }
 
-    public int getManagerOnlyOptions(List<String> managerOnlyMenu) {
-        String managerOnlyNumber = in.nextLine();
+    public int getMenuNum(List<?> menu) {
+        String menuNum = in.nextLine();
         System.out.println();
-        return Validator.getValidMenuOption(managerOnlyNumber, managerOnlyMenu);
+        return Validator.getValidMenuOption(menuNum, menu);
     }
 
     public String getNewName() {
-        System.out.println("Enter company name:");
         return in.nextLine();
     }
 
     public void closeConnection() {
         in.close();
     }
-
 }
 
 class Printer {
 
-    public static void printMenu(List<String> menu) {
+    public static void printMenu(List<?> menu) {
 
         for (int i = 1; i < menu.size(); i++) {
             System.out.println(i + ". " + menu.get(i));
@@ -114,11 +182,11 @@ class Printer {
 
 class Validator {
 
-    static int getValidMenuOption(String menuOption, List<String> menu) {
+    static int getValidMenuOption(String menuOption, List<?> menu) {
         int loginMenuNumber = 0;
         try {
             loginMenuNumber = Integer.parseInt(menuOption);
-            if (loginMenuNumber < -1 || loginMenuNumber >= menu.size()) {
+            if (loginMenuNumber < -1 || loginMenuNumber > menu.size()) {
                 return 0;
             }
         } catch (NumberFormatException n) {
@@ -127,5 +195,4 @@ class Validator {
 
         return loginMenuNumber;
     }
-
 }
