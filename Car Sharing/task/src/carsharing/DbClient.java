@@ -1,5 +1,8 @@
 package carsharing;
 
+import org.h2.jdbc.JdbcSQLException;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +58,10 @@ public class DbClient {
 
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Company with this name already exists.\n");
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -89,7 +95,10 @@ public class DbClient {
 
             preparedStatement.executeUpdate();
             return true;
-        } catch (SQLException e) {
+        }catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Car with this name already exists.\n");
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 

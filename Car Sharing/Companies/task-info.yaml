@@ -18,16 +18,40 @@ files:
   - name: src/carsharing/DbConfig.java
     visible: true
     learner_created: true
-  - name: src/carsharing/CompanyDOA.java
-    visible: true
-    learner_created: true
-  - name: src/carsharing/db/carsharing.trace.db
-    visible: true
-    learner_created: true
   - name: src/carsharing/DbClient.java
     visible: true
     learner_created: true
-  - name: src/carsharing/CompanyDOAImpl.java
+  - name: src/carsharing/Car.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarDAOImpl.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Printer.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDAO.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Validator.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDAOImpl.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/UserInput.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/db/tempDatabase.mv.db
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarDAO.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarActions.java
     visible: true
     learner_created: true
 feedback_link: https://hyperskill.org/projects/140/stages/759/implement#comment

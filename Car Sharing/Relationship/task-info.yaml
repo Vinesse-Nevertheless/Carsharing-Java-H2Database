@@ -33,9 +33,32 @@ files:
   - name: src/carsharing/CarDAOImpl.java
     visible: true
     learner_created: true
-  - name: src/carsharing/DbDAO.java
+  - name: src/carsharing/UserInput.java
     visible: true
     learner_created: true
+  - name: src/carsharing/Validator.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Printer.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/db/carsharing.mv.db
+    visible: true
+    is_binary: true
+    learner_created: true
+  - name: src/carsharing/db/tempDatabase.mv.db
+    visible: true
+    is_binary: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/140/stages/760/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Mon, 19 Oct 2026 05:04:18 UTC"
 record: -1
