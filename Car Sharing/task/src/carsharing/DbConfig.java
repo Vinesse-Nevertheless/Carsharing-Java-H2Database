@@ -5,6 +5,8 @@ public class DbConfig {
     static final String JDBC_Driver = "org.h2.Driver";
     static String databaseName = "carsharing";
 
+
+
     static String DB_URL;
 
     public static void connectToDb (String[] args){
@@ -24,5 +26,9 @@ public class DbConfig {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static String getDbUrl() {
+        return DB_URL;
     }
 }

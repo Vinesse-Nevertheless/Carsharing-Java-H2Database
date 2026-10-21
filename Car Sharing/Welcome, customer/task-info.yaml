@@ -14,6 +14,60 @@ files:
   - name: test/DatabaseUtil.java
     visible: true
     learner_created: false
+  - name: src/carsharing/Car.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarDAOImpl.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Company.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/DbConfig.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Printer.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDAO.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Validator.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CompanyDAOImpl.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/UserInput.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/db/tempDatabase.mv.db
+    visible: true
+    learner_created: true
+  - name: src/carsharing/DbClient.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarDAO.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CarActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CustomerActions.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/Customer.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CustomerDAO.java
+    visible: true
+    learner_created: true
+  - name: src/carsharing/CustomerDAOImpl.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/140/stages/761/implement#comment
 status: Unchecked
 record: -1

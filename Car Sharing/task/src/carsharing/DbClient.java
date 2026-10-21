@@ -10,9 +10,21 @@ import java.util.List;
 public class DbClient {
 
     String DB_URL;
+    static DbClient dbClientInstance;
 
-    public DbClient(String DB_URL) {
+    private DbClient(String DB_URL) {
         this.DB_URL = DB_URL;
+    }
+
+    //singleton for shared single reusable instance of dbClient
+    public static void setInstance(String DB_URL){
+        if (dbClientInstance == null){
+            dbClientInstance = new DbClient(DB_URL);
+        }
+    }
+
+    public static DbClient getDbClientInstance(){
+        return dbClientInstance;
     }
 
     //create COMPANY table
@@ -23,8 +35,6 @@ public class DbClient {
             establishConnection(createCompanySQL);
     }
 
-    //start here
-
     //create CAR table
     public void createCarTable() {
         String createCarSQL = "CREATE TABLE IF NOT EXISTS CAR " +
@@ -34,6 +44,18 @@ public class DbClient {
                 "CONSTRAINT fk_company_id FOREIGN KEY (COMPANY_ID) REFERENCES COMPANY(ID))";
         establishConnection(createCarSQL);
     }
+
+    //create CUSTOMER table
+    public void createCustomerTable(){
+        String createCustomerSQL = "CREATE TABLE IF NOT EXISTS CUSTOMER " +
+                "( ID INT PRIMARY KEY AUTO_INCREMENT, " +
+                "NAME VARCHAR UNIQUE NOT NULL " +
+                "RENTED_CAR_ID INT DEFAULT NULL, " +
+                "CONSTRAINT fk_car_id FOREIGN KEY (ID) REFERENCES (CAR))";
+
+        establishConnection(createCustomerSQL);
+    }
+
 
     public void establishConnection(String createTableSQL){
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -124,5 +146,23 @@ public class DbClient {
         }
 
         return carList;
+    }
+
+
+    //Select all customers
+    public List<Customer> getAllCustomers(String sql) {
+        List<Customer> customerList = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                customerList.add(new Customer(resultSet.getInt("id"), resultSet.getString("name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customerList;
     }
 }

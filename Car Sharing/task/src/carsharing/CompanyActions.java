@@ -9,11 +9,11 @@ class CompanyActions {
 
     UserInput userInput = new UserInput();
     CompanyDAOImpl companyDAOImpl;
-    CarActions manager;
+    CarActions carActions;
 
-    public CompanyActions(CompanyDAOImpl companyDAOimpl) {
-        this.companyDAOImpl = companyDAOimpl;
-        manager = new CarActions(companyDAOImpl.getDbClient());
+    public CompanyActions() {
+        companyDAOImpl = new CompanyDAOImpl(DbClient.getDbClientInstance());
+        carActions = new CarActions();
     }
 
     void executeCompanyTasks() {
@@ -35,7 +35,7 @@ class CompanyActions {
                             continue;
                         }
                         System.out.println("'" + companies.get(companyNum - 1).getName() + "' " + "company");
-                        manager.executeCarTasks(companyNum);
+                        carActions.executeCarTasks(companyNum);
                     }
                 }
                 case 2 -> {

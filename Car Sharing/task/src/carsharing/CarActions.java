@@ -11,9 +11,10 @@ class CarActions {
     UserInput userInput = new UserInput();
     CarDAO carDAOImpl;
 
-    public CarActions(DbClient dbClient) {
-        dbClient.createCarTable();
-        carDAOImpl = new CarDAOImpl(dbClient);
+    public CarActions() {
+        DbClient dbClientInstance = DbClient.dbClientInstance;
+        dbClientInstance.createCarTable();
+        carDAOImpl = new CarDAOImpl(dbClientInstance);
     }
 
     void executeCarTasks(int companyId) {
