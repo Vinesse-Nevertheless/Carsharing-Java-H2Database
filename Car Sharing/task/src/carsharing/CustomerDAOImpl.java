@@ -6,14 +6,15 @@ public class CustomerDAOImpl implements CustomerDAO{
 
     DbClient dbClient;
     private final String INSERT_DATA;
-    private final String SELECT_ALL;
+    private final String SELECT_ALL = "SELECT * FROM CUSTOMER";;
+  //  private final String SELECT_CAR_RENTED_BY_CUSTOMER = "SELECT * FROM CUSTOMER";
 
     public CustomerDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;
 
         INSERT_DATA = "INSERT INTO CUSTOMER"
                 + " (name) VALUES (?)";
-        SELECT_ALL = "SELECT * FROM CUSTOMER";
+
     }
 
     @Override
@@ -26,9 +27,10 @@ public class CustomerDAOImpl implements CustomerDAO{
         return dbClient.getAllCustomers(SELECT_ALL);
     }
 
-
-    public DbClient getDbClient() {
-        return dbClient;
+    @Override
+    public Car getCarRentedByCustomer() {
+        return dbClient.getCarRentedByCustomer(SELECT_ALL);
     }
+
 
 }

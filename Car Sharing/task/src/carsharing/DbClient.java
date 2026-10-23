@@ -1,6 +1,5 @@
 package carsharing;
 
-import org.h2.jdbc.JdbcSQLException;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 
 import java.sql.*;
@@ -164,5 +163,23 @@ public class DbClient {
         }
 
         return customerList;
+    }
+
+    public Car getCarRentedByCustomer(String selectAll) {
+        Car rentedCar = null;
+
+        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
+             Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(selectAll)) {
+
+            while (resultSet.next()) {
+                if (resultSet.getString("rented_car_id") != null) {
+                    rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rentedCar;
     }
 }

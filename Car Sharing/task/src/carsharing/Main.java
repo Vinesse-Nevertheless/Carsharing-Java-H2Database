@@ -23,7 +23,6 @@ public class Main {
     }
 
     static void init() {
-
         UserInput userInput = new UserInput();
         CompanyActions companyActions = new CompanyActions();
         CustomerActions customerActions = new CustomerActions();
@@ -39,17 +38,16 @@ public class Main {
 
             switch (loginIdentity) {
                 case 0 -> {
+                    userInput.closeConnection();
                     return;
                 }
                 case 1 -> companyActions.executeCompanyTasks();
                 case 2 -> customerActions.executeRentalCustomerActions();
                 case 3 -> customerActions.createRentalCustomer();
             }
-
-            userInput.closeConnection();
         }
     }
-
+}
 
     /*static void init() {
 
@@ -84,7 +82,7 @@ public class Main {
             //  }
             userInput.closeConnection();
         }
-    }*/
-}
+    }
+}*/
 
 
