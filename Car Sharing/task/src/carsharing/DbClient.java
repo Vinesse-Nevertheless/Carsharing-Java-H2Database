@@ -136,7 +136,6 @@ public class DbClient {
             preparedStatement.setInt(1, company_id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                  //  carList.add(new Car(resultSet.getString("name"), resultSet.getInt("id")));
                     carList.add(new Car( resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id")));
                 }
             }
@@ -184,7 +183,25 @@ public class DbClient {
         return customerList;
     }
 
-    public Car getCarRentedByCustomer(String selectAll) {
+    public Car getCarCustomerRented(String selectRentedCar, Customer customer) {
+        Car rentedCar = null;
+
+        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
+             PreparedStatement statement = conn.prepareStatement(selectRentedCar);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                if (resultSet.getInt("id") == customer.getRented_car_id()) {
+                    rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rentedCar;
+    }
+
+   /* public Car getCarRentedByCustomer(String selectAll) {
         Car rentedCar = null;
 
         try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
@@ -200,5 +217,5 @@ public class DbClient {
             e.printStackTrace();
         }
         return rentedCar;
-    }
+    }*/
 }

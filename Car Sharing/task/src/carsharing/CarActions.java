@@ -25,21 +25,6 @@ class CarActions {
         }
     }
 
-/*
-    void printCarsFromCompany(int companyId){
-        List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("The car list is empty!\n");
-        } else {
-            System.out.println("Car list:");
-            for (int i = 0; i < carsAtCompany.size(); i++) {
-                System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
-            }
-            System.out.println();
-        }
-    }
-*/
-
     List<Car> getCarList(int companyId){
         List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
         if (carsAtCompany.isEmpty()) {

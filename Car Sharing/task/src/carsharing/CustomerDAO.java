@@ -5,5 +5,6 @@ import java.util.List;
 public interface CustomerDAO {
     boolean addCustomer(Customer customer);
     List<Customer> findAll();
-    Car getCarRentedByCustomer();
+   // Car getCarRentedByCustomer();
+    Car getCarCustomerRented(Customer customer);
 }

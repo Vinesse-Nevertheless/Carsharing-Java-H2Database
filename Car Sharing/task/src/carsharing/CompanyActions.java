@@ -48,31 +48,7 @@ class CompanyActions {
             int companyChoice = userInput.getMenuNum(companyMenu);
             switch (companyChoice) {
                 case 1 -> chooseCompany();
-/*                {
-                    List<Company> companies = companyDAOImpl.findAll();
-                    if (companies.isEmpty()) {
-                        System.out.println("The company list is empty!\n");
-                    } else {
-                        System.out.println("Choose the company:");
-                        companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
-                        System.out.println("0. Back");
-
-                        int companyNum = userInput.getMenuNum(companies);
-                        if (companyNum == 0) {
-                            continue;
-                        }
-                        System.out.println("'" + companies.get(companyNum - 1).getName() + "' " + "company");
-                        carActions.executeCarTasks(companyNum);
-                    }
-                }*/
                 case 2 ->  createCompany();
-                /*{
-                    System.out.println("Enter the company name:");
-                    String name = userInput.getNewName();
-                    if (companyDAOImpl.add(new Company(name))) {
-                        System.out.println("The company was created!\n");
-                    }
-                }*/
                 case 0 -> {
                     return;
                 }

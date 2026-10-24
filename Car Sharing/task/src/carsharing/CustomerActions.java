@@ -24,7 +24,6 @@ class CustomerActions {
     }
 
     void showCustomerList() {
-        // List<Customer> customers = customerDAOimpl.findAll();
         customers = customerDAOimpl.findAll();
         if (customers.isEmpty()) {
             System.out.println("The customer list is empty!\n");
@@ -44,39 +43,6 @@ class CustomerActions {
             System.out.println("The customer was created!\n");
         }
     }
-
-    //These might need to be customer actions!!!
-/*    void rentCarToCustomer(int companyId){
-        List<Car> carsAtCompany = carActions.carDAOImpl.findCarsPerCompany(companyId);
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("The car list is empty!\n");
-        } else {
-            System.out.println("Choose a car:");
-            for (int i = 0; i < carsAtCompany.size(); i++) {
-                System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
-            }
-            System.out.println("0. Back");
-
-            int carNum = userInput.getMenuNum(carsAtCompany);
-            if (carNum == 0) {
-                return;
-            }
-            System.out.println("You rented a " + "'" + carsAtCompany.get(carNum - 1).getName() + "' " );
-
-        }
-    }
-
-    Car getCarCustomerRented(int companyId){
-        List<Car> carsAtCompany = carActions.carDAOImpl.findCarsPerCompany(companyId);
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("You haven't rented a car!\n");  //check statement
-        } else {
-            System.out.println("Your rented car:");
-            carsAtCompany.get(0).getName();
-
-
-        }
-    }*/
 
     void rentCarToCustomer(int companyId) {
 /*        List<Car> carsAtCompany = carActions.carDAOImpl.findCarsPerCompany(companyId);
@@ -102,8 +68,8 @@ class CustomerActions {
 
     }
 
-    void showCarCustomerRented() {
-        Car rentedCar = customerDAOimpl.getCarRentedByCustomer();
+    void showCarCustomerRented(Customer customer) {
+        Car rentedCar = customerDAOimpl.getCarCustomerRented(customer);
         if (rentedCar == null) {
             System.out.println("You haven't rented a car!\n");  //check statement
         } else {
@@ -128,7 +94,7 @@ class CustomerActions {
         Printer.printMenu(rentCarMenu);
         int customerRentChoice = userInput.getMenuNum(rentCarMenu);
         switch (customerRentChoice) {
-            case 1 -> rentCar(customerRentChoice);
+            case 1 -> rentCar(customers.get(rentalCarActionNum -1));
 
             /*{
                 if (customerDAOimpl.getCarRentedByCustomer() == null) {
@@ -154,16 +120,9 @@ class CustomerActions {
             }
 
             case 3 -> {
-
+                showCarCustomerRented(customers.get(rentalCarActionNum -1));
 
             }
-/*                case 2 -> {
-                    System.out.println("Enter the car name:");
-                    String name = userInput.getNewName();
-                    if (carDAOImpl.addCarToCompany(new Car(companyId, name))) {
-                        System.out.println("The car was added!\n");
-                    }
-                }*/
             case 0 -> {
                 return;
             }
@@ -171,8 +130,8 @@ class CustomerActions {
     }
 
 
-    void rentCar(int customerRentChoice){
-        if (customerDAOimpl.getCarRentedByCustomer() == null) {
+    void rentCar(Customer customer){
+        if (customerDAOimpl.getCarCustomerRented(customer) == null) {
             companyActions.executeCompanyTasks();
         } else {
             System.out.println("You've already rented a car!");
