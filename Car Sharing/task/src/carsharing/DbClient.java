@@ -187,12 +187,15 @@ public class DbClient {
         Car rentedCar = null;
 
         try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
-             PreparedStatement statement = conn.prepareStatement(selectRentedCar);
-             ResultSet resultSet = statement.executeQuery()) {
+             PreparedStatement preparedStatement = conn.prepareStatement(selectRentedCar)) {
 
-            while (resultSet.next()) {
-                if (resultSet.getInt("id") == customer.getRented_car_id()) {
+            preparedStatement.setInt(1, customer.getRented_car_id());
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    //  if (resultSet.getInt("id") == customer.getRented_car_id()) {
                     rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
+                    // }
                 }
             }
         } catch (SQLException e) {

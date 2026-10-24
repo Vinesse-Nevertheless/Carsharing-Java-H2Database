@@ -28,7 +28,7 @@ class CustomerActions {
         if (customers.isEmpty()) {
             System.out.println("The customer list is empty!\n");
         } else {
-            System.out.println("Choose a customer:");
+            System.out.println("Customer list:");
             for (int i = 0; i < customers.size(); i++) {
                 System.out.println((i + 1) + ". " + customers.get(i).getName());
             }
@@ -40,7 +40,7 @@ class CustomerActions {
         System.out.println("Enter the customer name:");
         String name = userInput.getNewName();
         if (customerDAOimpl.addCustomer(new Customer(name))) {
-            System.out.println("The customer was created!\n");
+            System.out.println("The customer was added!\n");
         }
     }
 
@@ -71,7 +71,7 @@ class CustomerActions {
     void showCarCustomerRented(Customer customer) {
         Car rentedCar = customerDAOimpl.getCarCustomerRented(customer);
         if (rentedCar == null) {
-            System.out.println("You haven't rented a car!\n");  //check statement
+            System.out.println("You didn't rent a car!\n");  //check statement
         } else {
             System.out.println("Your rented car:\n" +
                     rentedCar.getName() +
@@ -91,10 +91,11 @@ class CustomerActions {
             return;
         }
 
-        Printer.printMenu(rentCarMenu);
-        int customerRentChoice = userInput.getMenuNum(rentCarMenu);
-        switch (customerRentChoice) {
-            case 1 -> rentCar(customers.get(rentalCarActionNum -1));
+        while (true) {
+            Printer.printMenu(rentCarMenu);
+            int customerRentChoice = userInput.getMenuNum(rentCarMenu);
+            switch (customerRentChoice) {
+                case 1 -> rentCar(customers.get(rentalCarActionNum));
 
             /*{
                 if (customerDAOimpl.getCarRentedByCustomer() == null) {
@@ -114,17 +115,18 @@ class CustomerActions {
                         System.out.println();
                     }*//*
             }*/
-            case 2 -> {
+                case 2 -> {
 
 
-            }
+                }
 
-            case 3 -> {
-                showCarCustomerRented(customers.get(rentalCarActionNum -1));
+                case 3 -> {
+                    showCarCustomerRented(customers.get(rentalCarActionNum));
 
-            }
-            case 0 -> {
-                return;
+                }
+                case 0 -> {
+                    return;
+                }
             }
         }
     }
