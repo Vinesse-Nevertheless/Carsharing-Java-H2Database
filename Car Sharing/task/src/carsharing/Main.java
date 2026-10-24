@@ -5,7 +5,7 @@ import java.util.List;
 public class Main {
     static DbClient dbClient;
     static CompanyDAOImpl companyDAOImpl;
-    static CustomerDAOImpl customerDAOImpl;
+  //  static CustomerDAOImpl customerDAOImpl;
 
     public static void main(String[] args) {
 
@@ -17,7 +17,7 @@ public class Main {
         dbClient.createCompanyTable();
 
         companyDAOImpl = new CompanyDAOImpl(dbClient);
-        customerDAOImpl = new CustomerDAOImpl(dbClient);
+   //     customerDAOImpl = new CustomerDAOImpl(dbClient);
 
         init();
     }

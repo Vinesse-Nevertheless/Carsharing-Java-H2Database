@@ -48,9 +48,9 @@ public class DbClient {
     public void createCustomerTable(){
         String createCustomerSQL = "CREATE TABLE IF NOT EXISTS CUSTOMER " +
                 "( ID INT PRIMARY KEY AUTO_INCREMENT, " +
-                "NAME VARCHAR UNIQUE NOT NULL " +
+                "NAME VARCHAR UNIQUE NOT NULL, " +
                 "RENTED_CAR_ID INT DEFAULT NULL, " +
-                "CONSTRAINT fk_car_id FOREIGN KEY (ID) REFERENCES (CAR))";
+                "CONSTRAINT fk_car_id FOREIGN KEY (RENTED_CAR_ID) REFERENCES CAR(ID))";
 
         establishConnection(createCustomerSQL);
     }
@@ -145,6 +145,25 @@ public class DbClient {
         }
 
         return carList;
+    }
+
+    // Run INSERT to Customer
+    public boolean addCustomer(String sql, String name) {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+
+            return true;
+        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Customer already exists.\n");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
 

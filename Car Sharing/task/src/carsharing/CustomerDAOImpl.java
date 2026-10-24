@@ -18,8 +18,8 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
-    public boolean add(Customer customer) {
-        return false;
+    public boolean addCustomer(Customer customer) {
+        return dbClient.addCustomer(INSERT_DATA, customer.getName());
     }
 
     @Override

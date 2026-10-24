@@ -10,12 +10,17 @@ class CustomerActions {
 
     UserInput userInput = new UserInput();
     CustomerDAOImpl customerDAOimpl;
+    CarDAOImpl carDAOImpl;
     CompanyActions companyActions = new CompanyActions();
     CarActions carActions = new CarActions();
     List<Customer> customers;
 
     public CustomerActions() {
-        this.customerDAOimpl = new CustomerDAOImpl(DbClient.getDbClientInstance());
+        DbClient dbClient = DbClient.getDbClientInstance();
+        dbClient.createCarTable();
+     //   this.carDAOImpl = new CarDAOImpl(dbClient);
+        dbClient.createCustomerTable();
+        this.customerDAOimpl = new CustomerDAOImpl(dbClient);
     }
 
     void showCustomerList() {
@@ -35,7 +40,7 @@ class CustomerActions {
     void createRentalCustomer() {
         System.out.println("Enter the customer name:");
         String name = userInput.getNewName();
-        if (customerDAOimpl.add(new Customer(name))) {
+        if (customerDAOimpl.addCustomer(new Customer(name))) {
             System.out.println("The customer was created!\n");
         }
     }
@@ -111,21 +116,28 @@ class CustomerActions {
 
     void executeRentalCustomerActions() {
         showCustomerList();
+        if (customers.isEmpty()) {
+            return;
+        }
+
         int rentalCarActionNum = userInput.getMenuNum(customers);
         if (rentalCarActionNum == 0) {
             return;
-        } else {
-            Printer.printMenu(rentCarMenu);
-            int customerRentChoice = userInput.getMenuNum(rentCarMenu);
-            switch (customerRentChoice) {
-                case 1 -> {
-                    if (customerDAOimpl.getCarRentedByCustomer() == null) {
-                        companyActions.executeCompanyTasks();
-                    } else {
-                        System.out.println("You've already rented a car!");
-                    }
+        }
 
-                   /* List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
+        Printer.printMenu(rentCarMenu);
+        int customerRentChoice = userInput.getMenuNum(rentCarMenu);
+        switch (customerRentChoice) {
+            case 1 -> rentCar(customerRentChoice);
+
+            /*{
+                if (customerDAOimpl.getCarRentedByCustomer() == null) {
+                    companyActions.executeCompanyTasks();
+                } else {
+                    System.out.println("You've already rented a car!");
+                }
+
+                   *//* List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
                     if (carsAtCompany.isEmpty()) {
                         System.out.println("The car list is empty!\n");
                     } else {
@@ -134,17 +146,17 @@ class CustomerActions {
                             System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
                         }
                         System.out.println();
-                    }*/
-                }
-                case 2 -> {
+                    }*//*
+            }*/
+            case 2 -> {
 
 
-                }
+            }
 
-                case 3 -> {
+            case 3 -> {
 
 
-                }
+            }
 /*                case 2 -> {
                     System.out.println("Enter the car name:");
                     String name = userInput.getNewName();
@@ -152,12 +164,19 @@ class CustomerActions {
                         System.out.println("The car was added!\n");
                     }
                 }*/
-                case 0 -> {
-                    return;
-                }
+            case 0 -> {
+                return;
             }
         }
     }
 
 
+    void rentCar(int customerRentChoice){
+        if (customerDAOimpl.getCarRentedByCustomer() == null) {
+            companyActions.executeCompanyTasks();
+        } else {
+            System.out.println("You've already rented a car!");
+        }
+
+    }
 }
