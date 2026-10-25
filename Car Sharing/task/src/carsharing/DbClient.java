@@ -204,6 +204,43 @@ public class DbClient {
         return rentedCar;
     }
 
+    //UPDATE
+    public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int rented_car_id) {
+
+        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(selectCarRentedByRentedCarId)) {
+
+            preparedStatement.setInt(1, rented_car_id);
+
+            return preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+    /*public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, Customer customer) {
+
+        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(selectCarRentedByRentedCarId)) {
+
+            preparedStatement.setInt(1, customer.getRented_car_id());
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                      if (resultSet.getInt("id") == customer.getRented_car_id()) {
+                     }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }*/
+
    /* public Car getCarRentedByCustomer(String selectAll) {
         Car rentedCar = null;
 

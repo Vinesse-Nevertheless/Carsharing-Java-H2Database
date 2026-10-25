@@ -11,6 +11,13 @@ public class CustomerDAOImpl implements CustomerDAO{
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
 
+    private final String RETURN_CAR_BY_RENTED_CAR_ID = "UPDATE CUSTOMER " +
+            "SET rented_car_id = NULL " +
+            "WHERE rented_car_id = ?";
+
+    private final String RENT_CAR_TO_CUSTOMER = "UPDATE CUSTOMER " +
+            "SET rented_car_id = ? ";
+
     public CustomerDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;
 
@@ -35,8 +42,23 @@ public class CustomerDAOImpl implements CustomerDAO{
     }*/
 
     @Override
+    public boolean rentCarToCustomer( Car car) {
+        return dbClient.returnCarCustomerRented(RENT_CAR_TO_CUSTOMER, car.getId());
+    }
+
+    @Override
     public Car getCarCustomerRented(Customer customer) {
         return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
+    }
+
+  /*  @Override
+    public boolean returnCarCustomerRented(Customer customer) {
+        return dbClient.returnCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
+    }*/
+
+    @Override
+    public boolean returnCarCustomerRented(Customer customer) {
+        return dbClient.returnCarCustomerRented(RETURN_CAR_BY_RENTED_CAR_ID, customer.getRented_car_id());
     }
 
 }

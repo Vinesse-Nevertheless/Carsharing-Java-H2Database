@@ -10,6 +10,7 @@ class CompanyActions {
     UserInput userInput = new UserInput();
     CompanyDAOImpl companyDAOImpl;
     CarActions carActions;
+    List<Company> companies;
 
     public CompanyActions() {
         companyDAOImpl = new CompanyDAOImpl(DbClient.getDbClientInstance());
@@ -24,16 +25,27 @@ class CompanyActions {
         }
     }
 
-    void chooseCompany(){
+
+    List<Company> getCompanyList() {
         List<Company> companies = companyDAOImpl.findAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!\n");
-        } else {
-            System.out.println("Choose the company:");
-            companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
-            System.out.println("0. Back");
+        }
+        return companies;
+    }
 
-            int companyNum = userInput.getMenuNum(companies);
+    int getCompanyChoiceFromMenu() {
+        companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
+        System.out.println("0. Back");
+
+        return userInput.getMenuNum(companies);
+    }
+
+    void chooseFromCompanyList() {
+        List<Company> companyList = getCompanyList();
+        if (!companyList.isEmpty()) {
+            System.out.println("Company list:");
+            int companyNum = getCompanyChoiceFromMenu();
             if (companyNum == 0) {
                 return;
             }
@@ -47,7 +59,7 @@ class CompanyActions {
             Printer.printMenu(companyMenu);
             int companyChoice = userInput.getMenuNum(companyMenu);
             switch (companyChoice) {
-                case 1 -> chooseCompany();
+                case 1 -> chooseFromCompanyList();
                 case 2 ->  createCompany();
                 case 0 -> {
                     return;
