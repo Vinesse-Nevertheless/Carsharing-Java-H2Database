@@ -221,6 +221,21 @@ public class DbClient {
 
     }
 
+    public boolean rentCarToCustomer(String rentCarToCustomer, int id) {
+        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(rentCarToCustomer)) {
+
+            preparedStatement.setInt(1, id);
+
+            return preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
     /*public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, Customer customer) {
 
         try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);

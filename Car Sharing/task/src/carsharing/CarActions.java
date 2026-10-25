@@ -37,7 +37,7 @@ class CarActions {
             for (int i = 0; i < carsAtCompany.size(); i++) {
                 System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
             }
-            System.out.println();
+
     }
    void executeCarTasks(int companyId) {
 
@@ -50,6 +50,7 @@ class CarActions {
                     if (!carList.isEmpty()) {
                         System.out.println("Car list:");
                         printCarsFromCompany(carList);
+                        System.out.println();
                     }
                 }
                 case 2 -> createCarForCompany(companyId);

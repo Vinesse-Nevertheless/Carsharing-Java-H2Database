@@ -27,7 +27,8 @@ class CompanyActions {
 
 
     List<Company> getCompanyList() {
-        List<Company> companies = companyDAOImpl.findAll();
+      //  List<Company> companies = companyDAOImpl.findAll();
+        companies = companyDAOImpl.findAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!\n");
         }

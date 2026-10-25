@@ -43,7 +43,7 @@ public class CustomerDAOImpl implements CustomerDAO{
 
     @Override
     public boolean rentCarToCustomer( Car car) {
-        return dbClient.returnCarCustomerRented(RENT_CAR_TO_CUSTOMER, car.getId());
+        return dbClient.rentCarToCustomer(RENT_CAR_TO_CUSTOMER, car.getId());
     }
 
     @Override

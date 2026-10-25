@@ -57,11 +57,12 @@ class CustomerActions {
         //if there are cars at the company
         List<Car> carsAtCompany = carActions.getCarList(companyId);
         // and if the customer doesn't already have a car
-        Car rentedCar = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
+        Car currentRentedCar = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
 
-        if (!carsAtCompany.isEmpty() && rentedCar == null) {
+        if (!carsAtCompany.isEmpty() && currentRentedCar == null) {
             System.out.println("Choose a car:");
             carActions.printCarsFromCompany(carsAtCompany);
+            System.out.println("0. Back");
         }
 
         int carNum = userInput.getMenuNum(carsAtCompany);
@@ -72,7 +73,7 @@ class CustomerActions {
         // TO DO
         // TO DO
         // TO DO
-       if (customerDAOimpl.rentCarToCustomer(carsAtCompany.get(carNum))) {
+       if (customerDAOimpl.rentCarToCustomer(carsAtCompany.get(carNum -1))) {
            System.out.println("You rented a " + "'" + carsAtCompany.get(carNum - 1).getName() + "' ");
        }
 
@@ -132,7 +133,7 @@ class CustomerActions {
             Printer.printMenu(rentCarMenu);
             int customerRentChoice = userInput.getMenuNum(rentCarMenu);
             switch (customerRentChoice) {
-                case 1 -> rentCarToCustomer(customers.get(rentalCarActionNum).getRented_car_id());
+                case 1 -> rentCarToCustomer(rentalCarActionNum);
               //  case 1 -> rentCar(customers.get(rentalCarActionNum));
 
             /*{
