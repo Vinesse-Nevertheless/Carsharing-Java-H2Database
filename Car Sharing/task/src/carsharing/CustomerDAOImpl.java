@@ -11,12 +11,15 @@ public class CustomerDAOImpl implements CustomerDAO{
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
 
+/*    private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CUSTOMER " +
+            "WHERE rented_car_id = ?";*/
+
     private final String RETURN_CAR_BY_RENTED_CAR_ID = "UPDATE CUSTOMER " +
             "SET rented_car_id = NULL " +
             "WHERE rented_car_id = ?";
 
     private final String RENT_CAR_TO_CUSTOMER = "UPDATE CUSTOMER " +
-            "SET rented_car_id = ? ";
+            "SET rented_car_id = ?";
 
     public CustomerDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;

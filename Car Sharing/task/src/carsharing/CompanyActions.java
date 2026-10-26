@@ -35,7 +35,8 @@ class CompanyActions {
         return companies;
     }
 
-    int getCompanyChoiceFromMenu() {
+    int getCompanyChoiceFromMenu(List<Company> companies) {
+  //  int getCompanyChoiceFromMenu() {
         companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
         System.out.println("0. Back");
 
@@ -46,7 +47,7 @@ class CompanyActions {
         List<Company> companyList = getCompanyList();
         if (!companyList.isEmpty()) {
             System.out.println("Company list:");
-            int companyNum = getCompanyChoiceFromMenu();
+            int companyNum = getCompanyChoiceFromMenu(companyList);
             if (companyNum == 0) {
                 return;
             }

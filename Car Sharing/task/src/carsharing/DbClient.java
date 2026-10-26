@@ -146,6 +146,27 @@ public class DbClient {
         return carList;
     }
 
+    //I MIGHT NOT NEED THIS.
+    //find car by id
+    public List<Car> findCarInCompanyById(String sql, int id) {
+        List<Car> carList = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+               // while (resultSet.next()) {
+                    carList.add(new Car( resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id")));
+               // }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return carList;
+    }
+
+
     // Run INSERT to Customer
     public boolean addCustomer(String sql, String name) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -212,7 +233,9 @@ public class DbClient {
 
             preparedStatement.setInt(1, rented_car_id);
 
-            return preparedStatement.execute();
+            preparedStatement.executeUpdate();
+
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -221,13 +244,17 @@ public class DbClient {
 
     }
 
-    public boolean rentCarToCustomer(String rentCarToCustomer, int id) {
+    //UPDATE
+    public boolean rentCarToCustomer(String rentCarToCustomer, int car_id) {
         try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(rentCarToCustomer)) {
 
-            preparedStatement.setInt(1, id);
+            System.out.println(car_id);
+            preparedStatement.setInt(1, car_id);
 
-            return preparedStatement.execute();
+            preparedStatement.executeUpdate();
+                return true;
+
 
         } catch (SQLException e) {
             e.printStackTrace();
