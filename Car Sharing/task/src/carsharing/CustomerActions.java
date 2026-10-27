@@ -10,16 +10,18 @@ class CustomerActions {
 
     UserInput userInput = new UserInput();
     CustomerDAOImpl customerDAOimpl;
-    CarDAOImpl carDAOImpl;
     CompanyActions companyActions = new CompanyActions();
     CarActions carActions = new CarActions();
     List<Customer> customers;
 
-    public CustomerActions() {
-        DbClient dbClient = DbClient.getDbClientInstance();
-        dbClient.createCarTable();
-        //   this.carDAOImpl = new CarDAOImpl(dbClient);
+    DbClient dbClient = DbClient.getDbClientInstance();
+    {
+       // dbClient.createCarTable();
         dbClient.createCustomerTable();
+    }
+
+    public CustomerActions() {
+
         this.customerDAOimpl = new CustomerDAOImpl(dbClient);
     }
 
@@ -44,7 +46,7 @@ class CustomerActions {
         }
     }
 
-    void rentCarToCustomer() {
+    void rentCarToCustomer(int customerId) {
         List<Company> companies = companyActions.getCompanyList();
 
         System.out.println("Choose a company:");
@@ -80,23 +82,19 @@ class CustomerActions {
        Car car = carsAtCompany.get(carNum -1 );
 
         //rented car id is not properly set during renting
-        if (customerDAOimpl.rentCarToCustomer(car)) {
+        if (customerDAOimpl.rentCarToCustomer(carNum, customerId)) {
             //    if (customerDAOimpl.rentCarToCustomer(carsAtCompany.get(carNum - 1))) {
-            System.out.println("You rented a " + "'" + car.getName() + "' ");
+
+     /*       List<Customer> all = customerDAOimpl.findAll();
+            for (int i = 0; i < all.size(); i++) {
+                System.out.println(all.get(i).getName() + " " + all.get(i).getRented_car_id());
+            }*/
+            System.out.println("You rented a " + "'" + car.getName() + "'\n");
         }
 
     }
 
     void returnRentedCar(int companyId) {
-/*        List<Car> carsAtCompany = carActions.carDAOImpl.findCarsPerCompany(companyId);
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("The car list is empty!\n");
-        } else {
-            System.out.println("Choose a car:");
-            for (int i = 0; i < carsAtCompany.size(); i++) {
-                System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
-            }
-            System.out.println("0. Back");*/
 
         List<Car> carsAtCompany = carActions.getCarList(companyId);
         Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
@@ -146,32 +144,9 @@ class CustomerActions {
             Printer.printMenu(rentCarMenu);
             int customerRentChoice = userInput.getMenuNum(rentCarMenu);
             switch (customerRentChoice) {
-                case 1 -> rentCarToCustomer();
-               // case 1 -> rentCarToCustomer(rentalCarActionNum);
-                //  case 1 -> rentCar(customers.get(rentalCarActionNum));
-
-            /*{
-                if (customerDAOimpl.getCarRentedByCustomer() == null) {
-                    companyActions.executeCompanyTasks();
-                } else {
-                    System.out.println("You've already rented a car!");
-                }
-
-                   *//* List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
-                    if (carsAtCompany.isEmpty()) {
-                        System.out.println("The car list is empty!\n");
-                    } else {
-                        System.out.println("Car list:");
-                        for (int i = 0; i < carsAtCompany.size(); i++) {
-                            System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
-                        }
-                        System.out.println();
-                    }*//*
-            }*/
+                case 1 -> rentCarToCustomer(rentalCarActionNum);
                 case 2 -> returnRentedCar(rentalCarActionNum);
-                case 3 -> showCarCustomerRented(customers.get(rentalCarActionNum - 1));
-
-
+                case 3 -> showCarCustomerRented(customers.get(rentalCarActionNum-1));
                 case 0 -> {
                     return;
                 }

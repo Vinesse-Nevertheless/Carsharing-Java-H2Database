@@ -8,5 +8,7 @@ public interface CustomerDAO {
    // Car getCarRentedByCustomer();
     Car getCarCustomerRented(Customer customer);
     boolean returnCarCustomerRented(Customer customer);
-    boolean rentCarToCustomer(Car car);
-    }
+   // boolean rentCarToCustomer(Car car);
+   boolean rentCarToCustomer(int rented_car_id, int customer_id);
+
+}

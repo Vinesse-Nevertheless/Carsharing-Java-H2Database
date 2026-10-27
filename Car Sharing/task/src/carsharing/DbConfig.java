@@ -27,8 +27,4 @@ public class DbConfig {
         }
 
     }
-
-    public static String getDbUrl() {
-        return DB_URL;
-    }
 }
