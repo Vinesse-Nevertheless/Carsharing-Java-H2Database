@@ -204,13 +204,13 @@ public class DbClient {
         return customerList;
     }
 
-    public Car getCarCustomerRented(String selectRentedCar, Customer customer) {
+    public Car getCarCustomerRented(String selectRentedCar, int rented_car_id) {
         Car rentedCar = null;
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(selectRentedCar)) {
 
-            preparedStatement.setInt(1, customer.getRented_car_id());
+            preparedStatement.setInt(1, rented_car_id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -219,11 +219,36 @@ public class DbClient {
                     // }
                 }
             }
-        } catch (SQLException e) {
+        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Car with this name already exists.\n");
+        }catch (SQLException e) {
             e.printStackTrace();
         }
         return rentedCar;
     }
+
+/*    public Car getCarCustomerRented(String selectRentedCar, int rented_car_id) {
+        Car rentedCar = null;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(selectRentedCar)) {
+
+            preparedStatement.setInt(1, rented_car_id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    //  if (resultSet.getInt("id") == customer.getRented_car_id()) {
+                    rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
+                    // }
+                }
+            }
+        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Car with this name already exists.\n");
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rentedCar;
+    }*/
 
     //UPDATE
     public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int rented_car_id) {

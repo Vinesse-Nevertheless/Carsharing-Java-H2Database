@@ -59,18 +59,28 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
+    public Car getCarCustomerRented(int rented_car_id) {
+        return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, rented_car_id);
+    }
+
+    @Override
+    public boolean returnCarCustomerRented(int rented_car_id) {
+        return dbClient.returnCarCustomerRented(RETURN_CAR_BY_RENTED_CAR_ID, rented_car_id);
+    }
+
+/*    @Override
     public Car getCarCustomerRented(Customer customer) {
         return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
-    }
+    }*/
 
   /*  @Override
     public boolean returnCarCustomerRented(Customer customer) {
         return dbClient.returnCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
     }*/
 
-    @Override
+/*    @Override
     public boolean returnCarCustomerRented(Customer customer) {
         return dbClient.returnCarCustomerRented(RETURN_CAR_BY_RENTED_CAR_ID, customer.getRented_car_id());
-    }
+    }*/
 
 }

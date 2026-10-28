@@ -16,7 +16,6 @@ class CustomerActions {
 
     DbClient dbClient = DbClient.getDbClientInstance();
     {
-       // dbClient.createCarTable();
         dbClient.createCustomerTable();
     }
 
@@ -54,13 +53,6 @@ class CustomerActions {
         if (companyId == 0) {
             return;
         }
-        // if the customer doesn't already have a car
-        Car currentRentedCar = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
-
-        if (currentRentedCar != null) {
-            System.out.println("You've already rented a car!");
-            return;
-        }
 
         //if there are cars at the company
         List<Car> carsAtCompany = carActions.getCarList(companyId);
@@ -74,58 +66,44 @@ class CustomerActions {
         carActions.printCarsFromCompany(carsAtCompany);
         System.out.println("0. Back");
 
-        int carNum = userInput.getMenuNum(carsAtCompany);
-        if (carNum == 0) {
+        int carId = userInput.getMenuNum(carsAtCompany);
+        if (carId == 0) {
             return;
         }
 
-       Car car = carsAtCompany.get(carNum -1 );
+       Car car = carsAtCompany.get(carId -1 );
 
         //rented car id is not properly set during renting
-        if (customerDAOimpl.rentCarToCustomer(carNum, customerId)) {
-            //    if (customerDAOimpl.rentCarToCustomer(carsAtCompany.get(carNum - 1))) {
-
-     /*       List<Customer> all = customerDAOimpl.findAll();
-            for (int i = 0; i < all.size(); i++) {
-                System.out.println(all.get(i).getName() + " " + all.get(i).getRented_car_id());
-            }*/
+        //rented car id == car id
+        if (customerDAOimpl.rentCarToCustomer(carId, customerId)) {
             System.out.println("You rented a " + "'" + car.getName() + "'\n");
         }
 
     }
 
-    void returnRentedCar(int companyId) {
-
-        List<Car> carsAtCompany = carActions.getCarList(companyId);
-        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
-
-        if (carsAtCompany.isEmpty() || carCustomerRented == null) {
+    void returnRentedCar(int customerId) {
+        if (customerDAOimpl.getCarCustomerRented(customerId) == null){
             System.out.println("You didn't rent a car.");
         }
 
-       // Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customers.get(companyId));
-       // if (carCustomerRented.getId() == customers.get(companyId).getRented_car_id()) {
-            //return rented car
-            //customerDAOimpl.returnCarCustomerRented(customers.get(companyId).getRented_car_id());
-            if (customerDAOimpl.returnCarCustomerRented(customers.get(companyId))) {
+        if (customerDAOimpl.returnCarCustomerRented(customerId)) {
                 System.out.println("You've returned a rented car!");
             }
-      //  }
 
     }
 
-    void showCarCustomerRented(Customer customer) {
-        System.out.println(customer.getName());
+    void showCarCustomerRented(int customerId) {
+       // System.out.println(customer.getName());
         //rented car id is not properly set during renting
-        System.out.println(customer.getRented_car_id());
-        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customer);
+       // System.out.println(customer.getRented_car_id());
+        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
         if (carCustomerRented == null) {
             System.out.println("You didn't rent a car!\n");
         } else {
             System.out.println("Your rented car:\n" +
-                    carCustomerRented.getName() +
+                    carCustomerRented.getName() + "\n" +
                     "Company:\n" +
-                    companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId()).getName());
+                    companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() +"\n");
         }
     }
 
@@ -135,8 +113,8 @@ class CustomerActions {
             return;
         }
 
-        int rentalCarActionNum = userInput.getMenuNum(customers);
-        if (rentalCarActionNum == 0) {
+        int customerId = userInput.getMenuNum(customers);
+        if (customerId == 0) {
             return;
         }
 
@@ -144,9 +122,9 @@ class CustomerActions {
             Printer.printMenu(rentCarMenu);
             int customerRentChoice = userInput.getMenuNum(rentCarMenu);
             switch (customerRentChoice) {
-                case 1 -> rentCarToCustomer(rentalCarActionNum);
-                case 2 -> returnRentedCar(rentalCarActionNum);
-                case 3 -> showCarCustomerRented(customers.get(rentalCarActionNum-1));
+                case 1 -> rentCarToCustomer(customerId);
+                case 2 -> returnRentedCar(customerId);
+                case 3 -> showCarCustomerRented(customerId);
                 case 0 -> {
                     return;
                 }
