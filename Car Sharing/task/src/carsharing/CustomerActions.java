@@ -1,6 +1,7 @@
 package carsharing;
 
 import java.util.List;
+import java.util.Optional;
 
 class CustomerActions {
     List<String> rentCarMenu = List.of("Back",
@@ -46,6 +47,22 @@ class CustomerActions {
     }
 
     void rentCarToCustomer(int customerId) {
+/*        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
+
+        if (carCustomerRented != null){
+            System.out.println("You've already rented a car!\n");
+            return;
+        }*/
+
+        Customer customer = customerDAOimpl.findAll().stream()
+                .filter(c -> c.getId() == customerId)
+                .toList().getFirst();
+
+        if ( customer != null && customer.getRented_car_id() > 0) {
+            System.out.println("You've already rented a car!\n");
+            return;
+        }
+
         List<Company> companies = companyActions.getCompanyList();
 
         System.out.println("Choose a company:");
@@ -83,11 +100,11 @@ class CustomerActions {
 
     void returnRentedCar(int customerId) {
         if (customerDAOimpl.getCarCustomerRented(customerId) == null){
-            System.out.println("You didn't rent a car.");
+            System.out.println("You didn't rent a car.\n");
         }
 
         if (customerDAOimpl.returnCarCustomerRented(customerId)) {
-                System.out.println("You've returned a rented car!");
+                System.out.println("You've returned a rented car!\n");
             }
 
     }
@@ -96,15 +113,21 @@ class CustomerActions {
        // System.out.println(customer.getName());
         //rented car id is not properly set during renting
        // System.out.println(customer.getRented_car_id());
-        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
-        if (carCustomerRented == null) {
-            System.out.println("You didn't rent a car!\n");
-        } else {
+
+        Customer customer = customerDAOimpl.findAll().stream()
+                .filter(c -> c.getId() == customerId)
+                .toList().getFirst();
+
+        if ( customer != null && customer.getRented_car_id() > 0) {
+            Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
             System.out.println("Your rented car:\n" +
                     carCustomerRented.getName() + "\n" +
                     "Company:\n" +
                     companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() +"\n");
+        } else {
+            System.out.println("You didn't rent a car!\n");
         }
+
     }
 
     void executeRentalCustomerActions() {

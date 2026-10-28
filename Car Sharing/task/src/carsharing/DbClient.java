@@ -251,12 +251,12 @@ public class DbClient {
     }*/
 
     //UPDATE
-    public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int rented_car_id) {
+    public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int customerId) {
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(selectCarRentedByRentedCarId)) {
 
-            preparedStatement.setInt(1, rented_car_id);
+            preparedStatement.setInt(1, customerId);
 
             preparedStatement.executeUpdate();
 
