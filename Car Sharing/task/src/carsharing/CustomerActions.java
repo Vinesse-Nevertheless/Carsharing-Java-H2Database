@@ -47,12 +47,12 @@ class CustomerActions {
     }
 
     void rentCarToCustomer(int customerId) {
-/*        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
+        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
 
         if (carCustomerRented != null){
             System.out.println("You've already rented a car!\n");
             return;
-        }*/
+        }
 
         Customer customer = customerDAOimpl.findAll().stream()
                 .filter(c -> c.getId() == customerId)
@@ -94,6 +94,15 @@ class CustomerActions {
         //rented car id == car id
         if (customerDAOimpl.rentCarToCustomer(carId, customerId)) {
             System.out.println("You rented a " + "'" + car.getName() + "'\n");
+
+            List<Customer> all = customerDAOimpl.findAll();
+
+            for (int i = 0; i < all.size(); i++) {
+                System.out.println(all.get(i).getId());
+                System.out.println(all.get(i).getName());
+                System.out.println(all.get(i).getRented_car_id());
+
+            }
         }
 
     }

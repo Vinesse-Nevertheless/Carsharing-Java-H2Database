@@ -49,7 +49,7 @@ public class DbClient {
         String createCustomerSQL = "CREATE TABLE IF NOT EXISTS CUSTOMER " +
                 "( ID INT PRIMARY KEY AUTO_INCREMENT, " +
                 "NAME VARCHAR UNIQUE NOT NULL, " +
-                "RENTED_CAR_ID INT DEFAULT NULL, " +
+                "RENTED_CAR_ID INT, " +
                 "CONSTRAINT fk_car_id FOREIGN KEY (RENTED_CAR_ID) REFERENCES CAR(ID))";
 
         establishConnection(createCustomerSQL);
@@ -195,7 +195,10 @@ public class DbClient {
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             while (resultSet.next()) {
-                customerList.add(new Customer(resultSet.getInt("id"), resultSet.getString("name")));
+                customerList.add(new Customer(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("rented_car_id")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -256,6 +259,8 @@ public class DbClient {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(selectCarRentedByRentedCarId)) {
 
+            conn.setAutoCommit(true);  // all changes are automatically saved in the database file
+
             preparedStatement.setInt(1, customerId);
 
             preparedStatement.executeUpdate();
@@ -273,6 +278,8 @@ public class DbClient {
     public boolean rentCarToCustomer(String rentCarToCustomer, int rented_car_id, int customer_id) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(rentCarToCustomer)) {
+
+            conn.setAutoCommit(true);  // all changes are automatically saved in the database file
 
             preparedStatement.setInt(1, rented_car_id);
             preparedStatement.setInt(2, customer_id);
