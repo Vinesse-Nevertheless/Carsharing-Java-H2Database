@@ -12,20 +12,11 @@ public class Car {
         this.name = name;
     }
 
-    //for retrieving the id and the company name when displaying list of companies
-    //check if this constructor is really needed
-    public Car(String name, int id){
-        this.id = id;
-        this.name = name;
-
-    }
-
-    //for retrieving the id and the company name when displaying list of companies
+    //for retrieving all the car info
     public Car(int id, String name, int company_id ){
         this.id = id;
         this.name = name;
         this.company_id = company_id;
-
     }
 
     public String getName() {

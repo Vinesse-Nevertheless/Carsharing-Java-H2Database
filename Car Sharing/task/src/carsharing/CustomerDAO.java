@@ -7,10 +7,11 @@ public interface CustomerDAO {
 
     List<Customer> findAll();
 
-   // Car getCarCustomerRented(int rented_car_id);
+    Customer getCustomerWhoRentedCar(int customer_id);
 
     boolean returnCarCustomerRented(int rented_car_id);
 
     boolean rentCarToCustomer(int rented_car_id, int customer_id);
+
 
 }

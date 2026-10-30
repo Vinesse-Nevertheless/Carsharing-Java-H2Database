@@ -144,6 +144,11 @@ public class DbClient {
         return carList;
     }
 
+    public Car getCarById (String sql, int id){
+        Car car = null;
+
+        return car;
+    }
 
     // Run INSERT to Customer
     public boolean addCustomer(String sql, String name) {
@@ -184,7 +189,8 @@ public class DbClient {
         return customerList;
     }
 
-    public Car getRentedCarById(String selectRentedCar, int rented_car_id) {
+    // get car customer rented by using rented_id
+    public Car getCarByRentedId(String selectRentedCar, int rented_car_id) {
         Car rentedCar = null;
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -206,6 +212,7 @@ public class DbClient {
     }
 
     //UPDATE
+    //set rented_car_id back to null
     public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int customerId) {
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -225,6 +232,7 @@ public class DbClient {
     }
 
     //UPDATE
+    //rent car by setting rented_car_id to car_id
     public boolean rentCarToCustomer(String rentCarToCustomer, int rented_car_id, int customer_id) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(rentCarToCustomer)) {
@@ -241,5 +249,24 @@ public class DbClient {
         }
         return false;
 
+    }
+
+    public Customer getCustomerWhoRentedCar(String findCustomerById, int customerId) {
+        Customer renter =  null;
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(findCustomerById)){
+
+            preparedStatement.setInt(1, customerId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()){
+                    renter = new Customer(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("rented_car_id"));
+                }
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return renter;
     }
 }

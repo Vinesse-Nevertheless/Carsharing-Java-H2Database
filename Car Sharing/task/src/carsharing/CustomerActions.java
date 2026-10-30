@@ -57,7 +57,7 @@ class CustomerActions {
         //if there are cars at the company
         int carId = 0;
         if (carsAtCompany.isEmpty()) {
-            System.out.println("There are no cars to rent.");
+           // System.out.println("There are no cars to rent.");
             return carId;
         }
 
@@ -70,46 +70,18 @@ class CustomerActions {
 
     void rentCarToCustomer(int customerId) {
 
-/*        Customer customer = customerDAOimpl.findAll().stream()
-                .filter(c -> c.getId() == customerId)
-                .toList().getFirst();
-
-        if (customer.getRented_car_id() > 0) {
-            System.out.println("You've already rented a car!\n");
-            return;
-        }*/
-
-        int rentedCarId = getRentedCarId(customerId);
-        if (rentedCarId > 0) {
+        //customer.getId() == customerId
+        Customer renter = customerDAOimpl.getCustomerWhoRentedCar(customerId);
+      //  int rentedCarId = getRentedCarId(customerId);
+        if (renter.getRented_car_id() > 0) {
             System.out.println("You've already rented a car!\n");
             return;
         }
-
-       /* List<Company> companies = companyActions.getCompanyList();
-
-        System.out.println("Choose a company:");
-        int companyId = companyActions.getCompanyChoiceFromMenu(companies);
-        if (companyId == 0) {
-            return;
-        }*/
 
         int companyId = getCompanyChoice();
         if (companyId == 0) {
             return;
         }
-/*        //if there are cars at the company
-        List<Car> carsAtCompany = carActions.getCarList(companyId);
-
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("There are no cars to rent.");
-            return;
-        }
-
-        System.out.println("Choose a car:");
-        carActions.printCarsFromCompany(carsAtCompany);
-        System.out.println("0. Back");
-
-        int carId = userInput.getMenuNum(carsAtCompany);*/
 
         List<Car> carsAtCompany = carActions.getCarList(companyId);
 
@@ -124,21 +96,16 @@ class CustomerActions {
         if (customerDAOimpl.rentCarToCustomer(carId, customerId)) {
             System.out.println("You rented a " + "'" + car.getName() + "'\n");
         }
-
     }
 
     void returnRentedCar(int customerId) {
-/*        Customer customer = customerDAOimpl.findAll().stream()
-                .filter(c -> c.getId() == customerId)
-                .toList().getFirst();
+ /*       int rentedCarId = getRentedCarId(customerId);
+        if (rentedCarId == 0) {*/
 
-        if (customer.getRented_car_id() == 0){
-            System.out.println("You didn't rent a car!\n");
-            return;
-        }*/
-
-        int rentedCarId = getRentedCarId(customerId);
-        if (rentedCarId == 0) {
+        //customer.getId() == customerId
+        Customer renter = customerDAOimpl.getCustomerWhoRentedCar(customerId);
+            //  int rentedCarId = getRentedCarId(customerId);
+        if (renter.getRented_car_id() == 0) {
             System.out.println("You didn't rent a car!\n");
             return;
         }
@@ -146,34 +113,30 @@ class CustomerActions {
         if (customerDAOimpl.returnCarCustomerRented(customerId)) {
             System.out.println("You've returned a rented car!\n");
         }
-
     }
 
     void showCarCustomerRented(int customerId) {
+/*        int rentedCarId = getRentedCarId(customerId);
+        if (rentedCarId == 0) {*/
 
-/*        Customer customer = customerDAOimpl.findAll().stream()
-                .filter(c -> c.getId() == customerId)
-                .toList().getFirst();
-
-        if (customer.getRented_car_id() > 0) {*/
-        int rentedCarId = getRentedCarId(customerId);
-        if (rentedCarId == 0) {
+        //customer.getId() == customerId
+        Customer renter = customerDAOimpl.getCustomerWhoRentedCar(customerId);
+            //  int rentedCarId = getRentedCarId(customerId);
+        if (renter.getRented_car_id() == 0) {
             System.out.println("You didn't rent a car!\n");
             return;
         }
 
-        //(RENTED_CAR_ID) REFERENCES CAR(ID)
-        Car carCustomerRented = carActions.carDAOImpl.getRentedCarById(rentedCarId);
+       //(RENTED_CAR_ID) REFERENCES CAR(ID)
+        Car carCustomerRented = carActions.carDAOImpl.getCarByRentedId(renter.getRented_car_id());
         System.out.println("Your rented car:\n" +
                 carCustomerRented.getName() + "\n" +
                 "Company:\n" +
+                //make this a call to the db specifically, it's more memory efficient for larger applications
                 companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() + "\n");
     }
 
-/*    boolean hasCustomerAlreadyRentedCar(int customerId) {
-        return getRentedCarId(customerId) > 0;
-    }*/
-
+    //make this a call to the db specifically, it's more memory efficient for larger applications
     int getRentedCarId(int customerId){
         return customerDAOimpl.findAll().stream()
                 .filter(c -> c.getId() == customerId)

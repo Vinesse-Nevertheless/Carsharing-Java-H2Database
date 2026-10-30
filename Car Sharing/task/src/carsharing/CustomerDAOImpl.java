@@ -9,6 +9,9 @@ public class CustomerDAOImpl implements CustomerDAO{
             + " (name) VALUES (?)";;
     private final String SELECT_ALL = "SELECT * FROM CUSTOMER";
 
+    private final String FIND_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMER " +
+            "WHERE ID = ?";
+
 /*    //should this be in CarDao?
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";*/
@@ -36,14 +39,14 @@ public class CustomerDAOImpl implements CustomerDAO{
     }
 
     @Override
+    public Customer getCustomerWhoRentedCar(int customer_id) {
+        return dbClient.getCustomerWhoRentedCar(FIND_CUSTOMER_BY_ID, customer_id);
+    }
+
+    @Override
     public boolean rentCarToCustomer( int rented_car_id, int customer_id) {
         return dbClient.rentCarToCustomer(RENT_CAR_TO_CUSTOMER, rented_car_id, customer_id);
     }
-
- /*   @Override
-    public Car getCarCustomerRented(int rented_car_id) {
-        return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, rented_car_id);
-    }*/
 
     @Override
     public boolean returnCarCustomerRented(int customerId) {

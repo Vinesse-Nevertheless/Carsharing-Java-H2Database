@@ -8,7 +8,10 @@ public class CarDAOImpl implements CarDAO{
             + " (company_id, name) VALUES (?, ?)";
     private final String SELECT_ALL_CARS_PER_COMPANY = "SELECT * FROM CAR WHERE company_id = ?";
 
-    private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
+   private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
+            "WHERE id = ?";
+
+    private final String SELECT_CAR_BY_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
 
     public CarDAOImpl(DbClient dbClient){
@@ -26,8 +29,12 @@ public class CarDAOImpl implements CarDAO{
     }
 
     @Override
-    public Car getRentedCarById(int rented_car_id) {
-        return dbClient.getRentedCarById(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, rented_car_id);
+    public Car getCarByRentedId(int rented_car_id) {
+        return dbClient.getCarByRentedId(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, rented_car_id);
+    }
+
+    public Car getCarById(int id) {
+        return dbClient.getCarById(SELECT_CAR_BY_ID, id);
     }
 
 }
