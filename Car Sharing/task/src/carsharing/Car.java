@@ -13,6 +13,7 @@ public class Car {
     }
 
     //for retrieving the id and the company name when displaying list of companies
+    //check if this constructor is really needed
     public Car(String name, int id){
         this.id = id;
         this.name = name;

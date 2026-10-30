@@ -5,15 +5,12 @@ import java.util.List;
 public class CompanyDAOImpl implements CompanyDAO{
 
     DbClient dbClient;
-    private final String INSERT_DATA;
-    private final String SELECT_ALL;
+    private final String INSERT_DATA = "INSERT INTO COMPANY"
+            + " (name) VALUES (?)";;
+    private final String SELECT_ALL = "SELECT * FROM COMPANY";;
 
     public CompanyDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;
-
-        INSERT_DATA = "INSERT INTO COMPANY"
-                + " (name) VALUES (?)";
-        SELECT_ALL = "SELECT * FROM COMPANY";
     }
 
     @Override
@@ -26,7 +23,4 @@ public class CompanyDAOImpl implements CompanyDAO{
         return dbClient.getAllCompanies(SELECT_ALL);
     }
 
-    public DbClient getDbClient() {
-        return dbClient;
-    }
 }

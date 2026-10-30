@@ -27,7 +27,6 @@ class CompanyActions {
 
 
     List<Company> getCompanyList() {
-      //  List<Company> companies = companyDAOImpl.findAll();
         companies = companyDAOImpl.findAll();
         if (companies.isEmpty()) {
             System.out.println("The company list is empty!\n");
@@ -36,7 +35,6 @@ class CompanyActions {
     }
 
     int getCompanyChoiceFromMenu(List<Company> companies) {
-  //  int getCompanyChoiceFromMenu() {
         companies.forEach(company -> System.out.println(company.getId() + ". " + company.getName()));
         System.out.println("0. Back");
 

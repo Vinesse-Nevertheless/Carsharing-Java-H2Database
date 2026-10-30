@@ -5,29 +5,17 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO{
 
     DbClient dbClient;
-    private final String INSERT_DATA;
+    private final String INSERT_DATA = "INSERT INTO CUSTOMER"
+            + " (name) VALUES (?)";;
     private final String SELECT_ALL = "SELECT * FROM CUSTOMER";
 
-    // get all customers who rented cars
-    // then get customer with rented car id = ?
-    // then get car info that matches that id
-
+/*    //should this be in CarDao?
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
-            "WHERE id = ?";
-
-/*    private final String SELECT_CAR_CUSTOMER_RENTED = "SELECT * FROM CUSTOMER " +
-            "WHERE rented_car_id = NOT NULL AND WHERE id = ?";*/
-
-/*    private final String RETURN_CAR_BY_RENTED_CAR_ID = "UPDATE CUSTOMER " +
-            "SET rented_car_id = NULL " +
-            "WHERE rented_car_id = ?";*/
+            "WHERE id = ?";*/
 
     private final String RETURN_CAR_BY_CUSTOMER_ID = "UPDATE CUSTOMER " +
             "SET rented_car_id = NULL " +
             "WHERE id = ?";
-
-/*    private final String RENT_CAR_TO_CUSTOMER = "UPDATE CUSTOMER " +
-            "SET rented_car_id = ?";*/
 
     private final String RENT_CAR_TO_CUSTOMER = "UPDATE CUSTOMER " +
             "SET rented_car_id = ? " +
@@ -35,10 +23,6 @@ public class CustomerDAOImpl implements CustomerDAO{
 
     public CustomerDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;
-
-        INSERT_DATA = "INSERT INTO CUSTOMER"
-                + " (name) VALUES (?)";
-
     }
 
     @Override
@@ -51,44 +35,19 @@ public class CustomerDAOImpl implements CustomerDAO{
         return dbClient.getAllCustomers(SELECT_ALL);
     }
 
-   /* @Override
-    public Car getCarRentedByCustomer() {
-        return dbClient.getCarRentedByCustomer(SELECT_ALL);
-    }*/
-
-/*    @Override
-    public boolean rentCarToCustomer( Car car) {
-        return dbClient.rentCarToCustomer(RENT_CAR_TO_CUSTOMER, car.getId());
-    }*/
-
     @Override
     public boolean rentCarToCustomer( int rented_car_id, int customer_id) {
         return dbClient.rentCarToCustomer(RENT_CAR_TO_CUSTOMER, rented_car_id, customer_id);
     }
 
-    @Override
+ /*   @Override
     public Car getCarCustomerRented(int rented_car_id) {
         return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, rented_car_id);
-    }
+    }*/
 
     @Override
     public boolean returnCarCustomerRented(int customerId) {
         return dbClient.returnCarCustomerRented(RETURN_CAR_BY_CUSTOMER_ID, customerId);
     }
-
-/*    @Override
-    public Car getCarCustomerRented(Customer customer) {
-        return dbClient.getCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
-    }*/
-
-  /*  @Override
-    public boolean returnCarCustomerRented(Customer customer) {
-        return dbClient.returnCarCustomerRented(SELECT_CAR_RENTED_BY_RENTED_CAR_ID, customer);
-    }*/
-
-/*    @Override
-    public boolean returnCarCustomerRented(Customer customer) {
-        return dbClient.returnCarCustomerRented(RETURN_CAR_BY_RENTED_CAR_ID, customer.getRented_car_id());
-    }*/
 
 }

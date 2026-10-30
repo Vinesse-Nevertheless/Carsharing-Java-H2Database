@@ -69,7 +69,6 @@ public class DbClient {
         }
     }
 
-
     // Run INSERT to Company
     public boolean addCompany(String sql, String company) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -126,7 +125,6 @@ public class DbClient {
         return false;
     }
 
-
     //Select all cars in a company
     public List<Car> findCarsPerCompany(String sql, int company_id) {
         List<Car> carList = new ArrayList<>();
@@ -138,26 +136,6 @@ public class DbClient {
                 while (resultSet.next()) {
                     carList.add(new Car( resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id")));
                 }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return carList;
-    }
-
-    //I MIGHT NOT NEED THIS.
-    //find car by id
-    public List<Car> findCarInCompanyById(String sql, int id) {
-        List<Car> carList = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-               // while (resultSet.next()) {
-                    carList.add(new Car( resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id")));
-               // }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,7 +164,6 @@ public class DbClient {
         return false;
     }
 
-
     //Select all customers
     public List<Customer> getAllCustomers(String sql) {
         List<Customer> customerList = new ArrayList<>();
@@ -207,7 +184,7 @@ public class DbClient {
         return customerList;
     }
 
-    public Car getCarCustomerRented(String selectRentedCar, int rented_car_id) {
+    public Car getRentedCarById(String selectRentedCar, int rented_car_id) {
         Car rentedCar = null;
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -217,9 +194,7 @@ public class DbClient {
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    //  if (resultSet.getInt("id") == customer.getRented_car_id()) {
                     rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
-                    // }
                 }
             }
         } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
@@ -229,29 +204,6 @@ public class DbClient {
         }
         return rentedCar;
     }
-
-/*    public Car getCarCustomerRented(String selectRentedCar, int rented_car_id) {
-        Car rentedCar = null;
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement preparedStatement = conn.prepareStatement(selectRentedCar)) {
-
-            preparedStatement.setInt(1, rented_car_id);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    //  if (resultSet.getInt("id") == customer.getRented_car_id()) {
-                    rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
-                    // }
-                }
-            }
-        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
-            System.out.println("Car with this name already exists.\n");
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rentedCar;
-    }*/
 
     //UPDATE
     public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, int customerId) {
@@ -290,42 +242,4 @@ public class DbClient {
         return false;
 
     }
-
-    /*public boolean returnCarCustomerRented(String selectCarRentedByRentedCarId, Customer customer) {
-
-        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
-             PreparedStatement preparedStatement = conn.prepareStatement(selectCarRentedByRentedCarId)) {
-
-            preparedStatement.setInt(1, customer.getRented_car_id());
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                      if (resultSet.getInt("id") == customer.getRented_car_id()) {
-                     }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-
-    }*/
-
-   /* public Car getCarRentedByCustomer(String selectAll) {
-        Car rentedCar = null;
-
-        try (Connection conn = DriverManager.getConnection(dbClientInstance.DB_URL);
-             Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectAll)) {
-
-            while (resultSet.next()) {
-                if (resultSet.getString("rented_car_id") != null) {
-                    rentedCar = new Car(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getInt("company_id"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return rentedCar;
-    }*/
 }

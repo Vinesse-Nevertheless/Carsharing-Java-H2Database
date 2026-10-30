@@ -9,11 +9,6 @@ public class Customer {
         this.name = name;
     }
 
-    public Customer(int id, String name){
-        this.id = id;
-        this.name = name;
-    }
-
     public Customer(int id, String name, int rented_car_id){
         this.id = id;
         this.name = name;
