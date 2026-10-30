@@ -232,9 +232,9 @@ public class DbClient {
             preparedStatement.setInt(1, rented_car_id);
             preparedStatement.setInt(2, customer_id);
 
-            int up = preparedStatement.executeUpdate();
-            System.out.println("Up is " + up);
-                return true;
+            preparedStatement.executeUpdate();
+
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();

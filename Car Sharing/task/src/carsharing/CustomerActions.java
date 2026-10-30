@@ -46,6 +46,28 @@ class CustomerActions {
         }
     }
 
+    int getCompanyChoice(){
+        List<Company> companies = companyActions.getCompanyList();
+
+        System.out.println("Choose a company:");
+        return companyActions.getCompanyChoiceFromMenu(companies);
+    }
+
+    int getCarChoice( List<Car> carsAtCompany, int companyId){
+        //if there are cars at the company
+        int carId = 0;
+        if (carsAtCompany.isEmpty()) {
+            System.out.println("There are no cars to rent.");
+            return carId;
+        }
+
+        System.out.println("Choose a car:");
+        carActions.printCarsFromCompany(carsAtCompany);
+        System.out.println("0. Back");
+
+        return userInput.getMenuNum(carsAtCompany);
+    }
+
     void rentCarToCustomer(int customerId) {
 
 /*        Customer customer = customerDAOimpl.findAll().stream()
@@ -63,15 +85,19 @@ class CustomerActions {
             return;
         }
 
-        List<Company> companies = companyActions.getCompanyList();
+       /* List<Company> companies = companyActions.getCompanyList();
 
         System.out.println("Choose a company:");
         int companyId = companyActions.getCompanyChoiceFromMenu(companies);
         if (companyId == 0) {
             return;
-        }
+        }*/
 
-        //if there are cars at the company
+        int companyId = getCompanyChoice();
+        if (companyId == 0) {
+            return;
+        }
+/*        //if there are cars at the company
         List<Car> carsAtCompany = carActions.getCarList(companyId);
 
         if (carsAtCompany.isEmpty()) {
@@ -83,7 +109,11 @@ class CustomerActions {
         carActions.printCarsFromCompany(carsAtCompany);
         System.out.println("0. Back");
 
-        int carId = userInput.getMenuNum(carsAtCompany);
+        int carId = userInput.getMenuNum(carsAtCompany);*/
+
+        List<Car> carsAtCompany = carActions.getCarList(companyId);
+
+        int carId = getCarChoice(carsAtCompany, companyId);
         if (carId == 0) {
             return;
         }
@@ -138,7 +168,6 @@ class CustomerActions {
                 carCustomerRented.getName() + "\n" +
                 "Company:\n" +
                 companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() + "\n");
-
     }
 
 /*    boolean hasCustomerAlreadyRentedCar(int customerId) {
