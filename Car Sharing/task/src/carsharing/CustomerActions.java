@@ -16,6 +16,7 @@ class CustomerActions {
     List<Customer> customers;
 
     DbClient dbClient = DbClient.getDbClientInstance();
+
     {
         dbClient.createCustomerTable();
     }
@@ -47,18 +48,12 @@ class CustomerActions {
     }
 
     void rentCarToCustomer(int customerId) {
-        Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
-
-        if (carCustomerRented != null){
-            System.out.println("You've already rented a car!\n");
-            return;
-        }
 
         Customer customer = customerDAOimpl.findAll().stream()
                 .filter(c -> c.getId() == customerId)
                 .toList().getFirst();
 
-        if ( customer != null && customer.getRented_car_id() > 0) {
+        if (customer != null && customer.getRented_car_id() > 0) {
             System.out.println("You've already rented a car!\n");
             return;
         }
@@ -88,7 +83,7 @@ class CustomerActions {
             return;
         }
 
-       Car car = carsAtCompany.get(carId -1 );
+        Car car = carsAtCompany.get(carId - 1);
 
         //rented car id is not properly set during renting
         //rented car id == car id
@@ -108,31 +103,37 @@ class CustomerActions {
     }
 
     void returnRentedCar(int customerId) {
-        if (customerDAOimpl.getCarCustomerRented(customerId) == null){
-            System.out.println("You didn't rent a car.\n");
+        Customer customer = customerDAOimpl.findAll().stream()
+                .filter(c -> c.getId() == customerId)
+                .toList().getFirst();
+
+        if (customer.getRented_car_id() == 0){
+            System.out.println("You didn't rent a car!\n");
+            return;
         }
 
+
         if (customerDAOimpl.returnCarCustomerRented(customerId)) {
-                System.out.println("You've returned a rented car!\n");
-            }
+            System.out.println("You've returned a rented car!\n");
+        }
 
     }
 
     void showCarCustomerRented(int customerId) {
-       // System.out.println(customer.getName());
+        // System.out.println(customer.getName());
         //rented car id is not properly set during renting
-       // System.out.println(customer.getRented_car_id());
+        // System.out.println(customer.getRented_car_id());
 
         Customer customer = customerDAOimpl.findAll().stream()
                 .filter(c -> c.getId() == customerId)
                 .toList().getFirst();
 
-        if ( customer != null && customer.getRented_car_id() > 0) {
+        if (customer != null && customer.getRented_car_id() > 0) {
             Car carCustomerRented = customerDAOimpl.getCarCustomerRented(customerId);
             System.out.println("Your rented car:\n" +
                     carCustomerRented.getName() + "\n" +
                     "Company:\n" +
-                    companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() +"\n");
+                    companyActions.companyDAOImpl.findAll().get(carCustomerRented.getCompanyId() - 1).getName() + "\n");
         } else {
             System.out.println("You didn't rent a car!\n");
         }
