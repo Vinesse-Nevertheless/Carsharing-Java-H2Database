@@ -3,20 +3,8 @@ package carsharing;
 import java.util.List;
 
 public class Main {
-   /* static DbClient dbClient;
-    static CompanyDAOImpl companyDAOImpl;*/
 
     public static void main(String[] args) {
-
-/*        DbConfig.connectToDb(args);
-
-        DbClient.setInstance(DbConfig.DB_URL);*/
-
-       /* dbClient = DbClient.getDbClientInstance();
-        dbClient.createCompanyTable();
-
-        companyDAOImpl = new CompanyDAOImpl(dbClient);*/
-
         connectToDatabase(args);
         initProgram();
     }

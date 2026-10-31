@@ -9,14 +9,13 @@ class CarActions {
             "Create a car");
 
     private UserInput userInput = new UserInput();
-     CarDAO carDAOImpl;
+    private CarDAO carDAOImpl;
 
     public CarActions() {
         DbClient dbClientInstance = DbClient.getDbClientInstance();
         dbClientInstance.createCarTable();
         carDAOImpl = new CarDAOImpl(dbClientInstance);
     }
-
 
     public CarDAO getCarDAOImpl() {
         return carDAOImpl;
@@ -30,7 +29,7 @@ class CarActions {
         }
     }
 
-    List<Car> getCarListForCompany(int companyId){
+    List<Car> getCarListForCompany(int companyId) {
         List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
         if (carsAtCompany.isEmpty()) {
             System.out.println("The car list is empty!\n");
@@ -38,17 +37,17 @@ class CarActions {
         return carsAtCompany;
     }
 
-    void printCarsFromCompany(List<Car> carsAtCompany){
-          /*
-          for loop iteration to allow the numbering for the cars at each company
-           to start at 1.
-           */
-           for (int i = 0; i < carsAtCompany.size(); i++) {
-                System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
-            }
+    void printCarsFromCompany(List<Car> carsAtCompany) {
+        /*
+        for loop iteration to allow the numbering for the cars at each company
+        to start at 1.
+        */
+        for (int i = 0; i < carsAtCompany.size(); i++) {
+            System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
+        }
     }
 
-   void executeCarTasks(int companyId) {
+    void executeCarTasks(int companyId) {
 
         while (true) {
             Printer.printMenu(carMenu);

@@ -10,7 +10,7 @@ class CompanyActions {
     private UserInput userInput = new UserInput();
 
     static DbClient dbClient;
-    CompanyDAOImpl companyDAOImpl;
+    private CompanyDAOImpl companyDAOImpl;
     private CarActions carActions;
     private List<Company> companies;
 
@@ -18,7 +18,6 @@ class CompanyActions {
         dbClient = DbClient.getDbClientInstance();
         dbClient.createCompanyTable();
         this.companyDAOImpl = new CompanyDAOImpl(dbClient);
-      //  companyDAOImpl = new CompanyDAOImpl(DbClient.getDbClientInstance());
         carActions = new CarActions();
     }
 
@@ -68,7 +67,7 @@ class CompanyActions {
             int companyChoice = userInput.getMenuNum(companyMenu);
             switch (companyChoice) {
                 case 1 -> chooseFromCompanyList();
-                case 2 ->  createCompany();
+                case 2 -> createCompany();
                 case 0 -> {
                     return;
                 }

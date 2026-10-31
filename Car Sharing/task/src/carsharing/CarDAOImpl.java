@@ -2,16 +2,17 @@ package carsharing;
 
 import java.util.List;
 
-public class CarDAOImpl implements CarDAO{
+public class CarDAOImpl implements CarDAO {
     DbClient dbClient;
+
     private final String INSERT_DATA = "INSERT INTO CAR"
             + " (company_id, name) VALUES (?, ?)";
     private final String SELECT_ALL_CARS_PER_COMPANY = "SELECT * FROM CAR WHERE company_id = ?";
 
-   private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
+    private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
 
-    public CarDAOImpl(DbClient dbClient){
+    public CarDAOImpl(DbClient dbClient) {
         this.dbClient = dbClient;
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 public class CompanyDAOImpl implements CompanyDAO{
 
     DbClient dbClient;
+
     private final String INSERT_DATA = "INSERT INTO COMPANY"
             + " (name) VALUES (?)";;
     private final String SELECT_ALL = "SELECT * FROM COMPANY";;
@@ -30,6 +31,4 @@ public class CompanyDAOImpl implements CompanyDAO{
     public Company getCompanyById(int company_id) {
         return dbClient.getCompanyById(FIND_COMPANY_BY_ID, company_id);
     }
-
-
 }
