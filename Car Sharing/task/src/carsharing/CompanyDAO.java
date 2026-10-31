@@ -5,4 +5,5 @@ import java.util.List;
 public interface CompanyDAO {
     boolean add(Company company);
     List<Company> findAll();
+    Company getCompanyById(int company_id);
 }

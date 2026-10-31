@@ -5,16 +5,13 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO{
 
     DbClient dbClient;
+
     private final String INSERT_DATA = "INSERT INTO CUSTOMER"
             + " (name) VALUES (?)";;
     private final String SELECT_ALL = "SELECT * FROM CUSTOMER";
 
     private final String FIND_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMER " +
             "WHERE ID = ?";
-
-/*    //should this be in CarDao?
-    private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
-            "WHERE id = ?";*/
 
     private final String RETURN_CAR_BY_CUSTOMER_ID = "UPDATE CUSTOMER " +
             "SET rented_car_id = NULL " +

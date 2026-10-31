@@ -4,17 +4,22 @@ import java.util.List;
 
 class CarActions {
 
-    List<String> carMenu = List.of("Back",
+    private List<String> carMenu = List.of("Back",
             "Car list",
             "Create a car");
 
-    UserInput userInput = new UserInput();
-    CarDAO carDAOImpl;
+    private UserInput userInput = new UserInput();
+     CarDAO carDAOImpl;
 
     public CarActions() {
-        DbClient dbClientInstance = DbClient.dbClientInstance;
+        DbClient dbClientInstance = DbClient.getDbClientInstance();
         dbClientInstance.createCarTable();
         carDAOImpl = new CarDAOImpl(dbClientInstance);
+    }
+
+
+    public CarDAO getCarDAOImpl() {
+        return carDAOImpl;
     }
 
     void createCarForCompany(int companyId) {
@@ -25,7 +30,7 @@ class CarActions {
         }
     }
 
-    List<Car> getCarList(int companyId){
+    List<Car> getCarListForCompany(int companyId){
         List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
         if (carsAtCompany.isEmpty()) {
             System.out.println("The car list is empty!\n");
@@ -34,11 +39,15 @@ class CarActions {
     }
 
     void printCarsFromCompany(List<Car> carsAtCompany){
-            for (int i = 0; i < carsAtCompany.size(); i++) {
+          /*
+          for loop iteration to allow the numbering for the cars at each company
+           to start at 1.
+           */
+           for (int i = 0; i < carsAtCompany.size(); i++) {
                 System.out.println((i + 1) + ". " + carsAtCompany.get(i).getName());
             }
-
     }
+
    void executeCarTasks(int companyId) {
 
         while (true) {
@@ -46,7 +55,7 @@ class CarActions {
             int carChoice = userInput.getMenuNum(carMenu);
             switch (carChoice) {
                 case 1 -> {
-                    List<Car> carList = getCarList(companyId);
+                    List<Car> carList = getCarListForCompany(companyId);
                     if (!carList.isEmpty()) {
                         System.out.println("Car list:");
                         printCarsFromCompany(carList);

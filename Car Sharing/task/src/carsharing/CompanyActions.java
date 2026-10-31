@@ -3,18 +3,27 @@ package carsharing;
 import java.util.List;
 
 class CompanyActions {
-    List<String> companyMenu = List.of("Back",
+    private List<String> companyMenu = List.of("Back",
             "Company list",
             "Create a company");
 
-    UserInput userInput = new UserInput();
+    private UserInput userInput = new UserInput();
+
+    static DbClient dbClient;
     CompanyDAOImpl companyDAOImpl;
-    CarActions carActions;
-    List<Company> companies;
+    private CarActions carActions;
+    private List<Company> companies;
 
     public CompanyActions() {
-        companyDAOImpl = new CompanyDAOImpl(DbClient.getDbClientInstance());
+        dbClient = DbClient.getDbClientInstance();
+        dbClient.createCompanyTable();
+        this.companyDAOImpl = new CompanyDAOImpl(dbClient);
+      //  companyDAOImpl = new CompanyDAOImpl(DbClient.getDbClientInstance());
         carActions = new CarActions();
+    }
+
+    public CompanyDAOImpl getCompanyDAOImpl() {
+        return companyDAOImpl;
     }
 
     void createCompany() {
@@ -24,7 +33,6 @@ class CompanyActions {
             System.out.println("The company was created!\n");
         }
     }
-
 
     List<Company> getCompanyList() {
         companies = companyDAOImpl.findAll();

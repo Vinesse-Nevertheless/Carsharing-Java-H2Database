@@ -2,9 +2,9 @@ package carsharing;
 
 public class Car {
 
-    int id;
-    int company_id;
-    String name;
+    private int id;
+    private int company_id;
+    private String name;
 
     //for adding just company name, id is auto incremented
     public Car(int company_id, String name){

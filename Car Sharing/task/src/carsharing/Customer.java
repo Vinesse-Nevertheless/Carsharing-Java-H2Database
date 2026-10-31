@@ -1,9 +1,9 @@
 package carsharing;
 
 public class Customer {
-    int id;
-    String name;
-    int rented_car_id;
+    private int id;
+    private String name;
+    private int rented_car_id;
 
     public Customer(String name){
         this.name = name;

@@ -9,6 +9,9 @@ public class CompanyDAOImpl implements CompanyDAO{
             + " (name) VALUES (?)";;
     private final String SELECT_ALL = "SELECT * FROM COMPANY";;
 
+    private final String FIND_COMPANY_BY_ID = "SELECT * FROM COMPANY " +
+            "WHERE ID =  ?";
+
     public CompanyDAOImpl(DbClient dbClient){
         this.dbClient = dbClient;
     }
@@ -22,5 +25,11 @@ public class CompanyDAOImpl implements CompanyDAO{
     public List<Company> findAll() {
         return dbClient.getAllCompanies(SELECT_ALL);
     }
+
+    @Override
+    public Company getCompanyById(int company_id) {
+        return dbClient.getCompanyById(FIND_COMPANY_BY_ID, company_id);
+    }
+
 
 }

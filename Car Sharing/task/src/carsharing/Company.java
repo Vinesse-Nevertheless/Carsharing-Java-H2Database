@@ -2,8 +2,8 @@ package carsharing;
 
 public class Company {
 
-    int id;
-    String name;
+    private int id;
+    private String name;
 
     //for adding just company name, id is auto incremented
     public Company (String name){

@@ -8,8 +8,8 @@ import java.util.List;
 
 public class DbClient {
 
-    String DB_URL;
-    static DbClient dbClientInstance;
+    private String DB_URL;
+    private static DbClient dbClientInstance;
 
     private DbClient(String DB_URL) {
         this.DB_URL = DB_URL;
@@ -26,6 +26,7 @@ public class DbClient {
         return dbClientInstance;
     }
 
+    /* CREATE TABLES */
     //create COMPANY table
     public void createCompanyTable() {
             String createCompanySQL = "CREATE TABLE IF NOT EXISTS COMPANY " +
@@ -69,6 +70,8 @@ public class DbClient {
         }
     }
 
+    /* CALLS TO COMPANY TABLE */
+
     // Run INSERT to Company
     public boolean addCompany(String sql, String company) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -105,6 +108,26 @@ public class DbClient {
         return companyList;
     }
 
+    // get company by id
+    public Company getCompanyById(String getbyId, int company_id) {
+        Company company =  null;
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(getbyId)) {
+
+            preparedStatement.setInt(1, company_id);
+
+            try( ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    company = new Company(resultSet.getInt("id"), resultSet.getString("name"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return company;
+    }
+
     // Run INSERT to Company
     public boolean addCarToCompany(String sql, int companyId, String car) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -125,6 +148,8 @@ public class DbClient {
         return false;
     }
 
+    /* CALLS TO CAR TABLE */
+
     //Select all cars in a company
     public List<Car> findCarsPerCompany(String sql, int company_id) {
         List<Car> carList = new ArrayList<>();
@@ -142,51 +167,6 @@ public class DbClient {
         }
 
         return carList;
-    }
-
-    public Car getCarById (String sql, int id){
-        Car car = null;
-
-        return car;
-    }
-
-    // Run INSERT to Customer
-    public boolean addCustomer(String sql, String name) {
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-
-            preparedStatement.setString(1, name);
-            preparedStatement.executeUpdate();
-
-            return true;
-        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
-            System.out.println("Customer already exists.\n");
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    //Select all customers
-    public List<Customer> getAllCustomers(String sql) {
-        List<Customer> customerList = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement statement = conn.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-
-            while (resultSet.next()) {
-                customerList.add(new Customer(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("rented_car_id")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return customerList;
     }
 
     // get car customer rented by using rented_id
@@ -250,6 +230,48 @@ public class DbClient {
         return false;
 
     }
+
+    /* CALLS TO CUSTOMER TABLE */
+
+    // Run INSERT to Customer
+    public boolean addCustomer(String sql, String name) {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+
+            return true;
+        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
+            System.out.println("Customer already exists.\n");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    //Select all customers
+    public List<Customer> getAllCustomers(String sql) {
+        List<Customer> customerList = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                customerList.add(new Customer(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getInt("rented_car_id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return customerList;
+    }
+
 
     public Customer getCustomerWhoRentedCar(String findCustomerById, int customerId) {
         Customer renter =  null;
