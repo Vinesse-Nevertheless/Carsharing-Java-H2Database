@@ -13,9 +13,8 @@ public class CarDAOImpl implements CarDAO {
             "WHERE id = ?";
 
     private final String SELECT_ALL_AVAILABLE_CARS_PER_COMPANY = "SELECT * FROM CAR " +
-            "JOIN Users ON CAR.id != CUSTOMER.rented_car_id " +
-            "WHERE CAR.company_id = ?";
-
+            "WHERE company_id = ? AND " +
+            "id NOT IN (SELECT rented_car_id FROM CUSTOMER WHERE rented_car_id IS NOT NULL) ";
 
     public CarDAOImpl(DbClient dbClient) {
         this.dbClient = dbClient;

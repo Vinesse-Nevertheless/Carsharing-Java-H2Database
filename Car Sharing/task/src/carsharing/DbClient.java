@@ -173,7 +173,7 @@ public class DbClient {
 
     //get available cars for a company
     public List<Car> findAvailableCarsPerCompany(String selectAvailableCar, int company_id){
-        List<Car> available = null;
+        List<Car> available = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement preparedStatement = conn.prepareStatement(selectAvailableCar)) {
