@@ -29,8 +29,18 @@ class CarActions {
         }
     }
 
+    //get list of cars per company
     List<Car> getCarListForCompany(int companyId) {
         List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
+        if (carsAtCompany.isEmpty()) {
+            System.out.println("The car list is empty!\n");
+        }
+        return carsAtCompany;
+    }
+
+
+    List<Car> getAvailableCarRentals(int companyId) {
+        List<Car> carsAtCompany = carDAOImpl.findAvailableCarsPerCompany(companyId);
         if (carsAtCompany.isEmpty()) {
             System.out.println("The car list is empty!\n");
         }

@@ -171,6 +171,27 @@ public class DbClient {
         return carList;
     }
 
+    //get available cars for a company
+    public List<Car> findAvailableCarsPerCompany(String selectAvailableCar, int company_id){
+        List<Car> available = null;
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement preparedStatement = conn.prepareStatement(selectAvailableCar)) {
+
+            preparedStatement.setInt(1, company_id);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    available.add(new Car(resultSet.getInt("id"),
+                            resultSet.getString("name"),
+                            resultSet.getInt("company_id")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return available;
+    }
+
     // Get car customer rented by using rented_id
     public Car getCarByRentedId(String selectRentedCar, int rented_car_id) {
         Car rentedCar = null;
@@ -187,8 +208,6 @@ public class DbClient {
                                         resultSet.getInt("company_id"));
                 }
             }
-        } catch (JdbcSQLIntegrityConstraintViolationException jdbcSQLException) {
-            System.out.println("Car with this name already exists.\n");
         } catch (SQLException e) {
             e.printStackTrace();
         }
