@@ -106,7 +106,7 @@ class CustomerActions {
 
         //rented car id == car id
         if (customerDAOimpl.rentCarToCustomer(car.getId(), renter.getId())) {
-            System.out.println("You rented a " + "'" + car.getName() + "'\n");
+            System.out.println("You rented " + "'" + car.getName() + "'\n");
         }
     }
 

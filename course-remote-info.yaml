@@ -3,20 +3,20 @@ hyperskill_project:
   ide_files: https://hyperskill.org/api/projects/140/additional-files/additional_files.json
   is_template_based: false
   use_ide: true
-update_date: "Mon, 02 Nov 2026 18:01:26 UTC"
+update_date: "Mon, 02 Nov 2026 23:01:34 UTC"
 stages:
   - id: 758
     step: 11501
-    is_completed: false
+    is_completed: true
   - id: 759
     step: 11502
-    is_completed: false
+    is_completed: true
   - id: 760
     step: 11503
-    is_completed: false
+    is_completed: true
   - id: 761
     step: 11504
-    is_completed: false
+    is_completed: true
 topics:
   0:
     - title: Computer algorithms
