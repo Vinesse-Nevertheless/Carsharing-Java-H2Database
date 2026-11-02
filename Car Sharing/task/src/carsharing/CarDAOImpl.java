@@ -7,11 +7,15 @@ public class CarDAOImpl implements CarDAO {
 
     private final String INSERT_DATA = "INSERT INTO CAR"
             + " (company_id, name) VALUES (?, ?)";
-  //  private final String SELECT_ALL_CARS_PER_COMPANY = "SELECT * FROM CAR WHERE company_id = ?";
 
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
 
+    /*
+    Make use of relational db to make a subquery that creates a list of rented_car_id(s)
+    Then main query can use that subquery list as an exclusion list, so we can get
+    all cars that haven't benn rented already.
+     */
     private final String SELECT_ALL_AVAILABLE_CARS_PER_COMPANY = "SELECT * FROM CAR " +
             "WHERE company_id = ? AND " +
             "id NOT IN (SELECT rented_car_id FROM CUSTOMER WHERE rented_car_id IS NOT NULL) ";
