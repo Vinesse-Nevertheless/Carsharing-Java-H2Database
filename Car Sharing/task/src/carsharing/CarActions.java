@@ -30,15 +30,6 @@ class CarActions {
     }
 
     //get list of cars per company
-    List<Car> getCarListForCompany(int companyId) {
-        List<Car> carsAtCompany = carDAOImpl.findCarsPerCompany(companyId);
-        if (carsAtCompany.isEmpty()) {
-            System.out.println("The car list is empty!\n");
-        }
-        return carsAtCompany;
-    }
-
-
     List<Car> getAvailableCarRentals(int companyId) {
         List<Car> carsAtCompany = carDAOImpl.findAvailableCarsPerCompany(companyId);
         if (carsAtCompany.isEmpty()) {
@@ -57,20 +48,23 @@ class CarActions {
         }
     }
 
+    void showCarList(int companyId){
+        //  List<Car> carList = getCarListForCompany(companyId);
+        List<Car> carList = getAvailableCarRentals(companyId);
+        if (!carList.isEmpty()) {
+            System.out.println("Car list:");
+            printCarsFromCompany(carList);
+            System.out.println();
+        }
+    }
+
     void executeCarTasks(int companyId) {
 
         while (true) {
             Printer.printMenu(carMenu);
             int carChoice = userInput.getMenuNum(carMenu);
             switch (carChoice) {
-                case 1 -> {
-                    List<Car> carList = getCarListForCompany(companyId);
-                    if (!carList.isEmpty()) {
-                        System.out.println("Car list:");
-                        printCarsFromCompany(carList);
-                        System.out.println();
-                    }
-                }
+                case 1 -> showCarList(companyId);
                 case 2 -> createCarForCompany(companyId);
                 case 0 -> {
                     return;

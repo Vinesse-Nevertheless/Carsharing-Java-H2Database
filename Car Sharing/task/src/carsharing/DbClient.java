@@ -150,27 +150,6 @@ public class DbClient {
 
     /* CALLS TO CAR TABLE */
 
-    //Select all cars in a company
-    public List<Car> findCarsPerCompany(String sql, int company_id) {
-        List<Car> carList = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, company_id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    carList.add(new Car(resultSet.getInt("id"),
-                                        resultSet.getString("name"),
-                                        resultSet.getInt("company_id")));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return carList;
-    }
-
     //get available cars for a company
     public List<Car> findAvailableCarsPerCompany(String selectAvailableCar, int company_id){
         List<Car> available = new ArrayList<>();

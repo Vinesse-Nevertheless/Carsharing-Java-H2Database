@@ -7,7 +7,7 @@ public class CarDAOImpl implements CarDAO {
 
     private final String INSERT_DATA = "INSERT INTO CAR"
             + " (company_id, name) VALUES (?, ?)";
-    private final String SELECT_ALL_CARS_PER_COMPANY = "SELECT * FROM CAR WHERE company_id = ?";
+  //  private final String SELECT_ALL_CARS_PER_COMPANY = "SELECT * FROM CAR WHERE company_id = ?";
 
     private final String SELECT_CAR_RENTED_BY_RENTED_CAR_ID = "SELECT * FROM CAR " +
             "WHERE id = ?";
@@ -23,11 +23,6 @@ public class CarDAOImpl implements CarDAO {
     @Override
     public boolean addCarToCompany(Car car) {
         return dbClient.addCarToCompany(INSERT_DATA, car.getCompanyId(), car.getName());
-    }
-
-    @Override
-    public List<Car> findCarsPerCompany(int company_id) {
-        return dbClient.findCarsPerCompany(SELECT_ALL_CARS_PER_COMPANY, company_id);
     }
 
     @Override

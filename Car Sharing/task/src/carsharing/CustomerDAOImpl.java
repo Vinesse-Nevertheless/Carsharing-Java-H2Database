@@ -7,7 +7,8 @@ public class CustomerDAOImpl implements CustomerDAO{
     DbClient dbClient;
 
     private final String INSERT_DATA = "INSERT INTO CUSTOMER"
-            + " (name) VALUES (?)";;
+            + " (name) VALUES (?)";
+
     private final String SELECT_ALL = "SELECT * FROM CUSTOMER";
 
     private final String FIND_CUSTOMER_BY_ID = "SELECT * FROM CUSTOMER " +

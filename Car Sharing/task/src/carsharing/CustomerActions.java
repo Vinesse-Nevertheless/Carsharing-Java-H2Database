@@ -92,6 +92,10 @@ class CustomerActions {
         // TEST TEST TEST
         List<Car> carsAtCompany = carActions.getAvailableCarRentals(companyId);
 
+        if (carsAtCompany.isEmpty()){
+            return;
+        }
+
         int carId = getCarChoice(carsAtCompany);
         if (carId == 0) {
             return;

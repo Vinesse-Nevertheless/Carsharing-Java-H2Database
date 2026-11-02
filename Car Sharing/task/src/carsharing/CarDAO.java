@@ -4,7 +4,6 @@ import java.util.List;
 
 public interface CarDAO {
     boolean addCarToCompany(Car car);
-    List<Car> findCarsPerCompany(int id);
     Car getCarByRentedId(int rented_car_id);
     List<Car> findAvailableCarsPerCompany(int company_id);
 }
