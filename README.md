@@ -21,7 +21,7 @@ To keep the codebase modular and maintainable, the application is divided into t
 
 1. **Presentation / CLI Layer (`Main`, `UserInput`, `Printer`, `*Actions`):** Manages console loops, menu routing, and user inputs using custom validators.
 2. **Data Access Layer (`*DAO` / `*DAOImpl`):** Abstracts SQL operations away from business logic, ensuring clean interfaces for interacting with data.
-3. **Persistence Layer (`DbClient`):** A thread-safe Singleton client that handles the H2 database lifecycle, connection strings, and statement execution.
+3. **Persistence Layer (`DbClient`):** A Singleton client that handles the H2 database lifecycle, connection strings, and statement execution.
 
 ---
 
