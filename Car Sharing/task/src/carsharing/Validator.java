@@ -8,7 +8,7 @@ class Validator {
         int loginMenuNumber = 0;
         try {
             loginMenuNumber = Integer.parseInt(menuOption);
-            if (loginMenuNumber < -1 || loginMenuNumber > menu.size()) {
+            if (loginMenuNumber < 0 || loginMenuNumber > menu.size()) {
                 System.out.println("Selection is out of bounds.");
                 return 0;
             }
